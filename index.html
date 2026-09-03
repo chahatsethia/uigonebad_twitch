@@ -1,0 +1,8851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>TWITCHY — ABSOLUTE RAGEBAIT</title>
+
+<script src="https://player.twitch.tv/js/embed/v1.js"></script>
+
+<style>
+:root{
+  --purple:#9147ff;
+  --bg:#0e0e10;
+  --panel:#18181b;
+  --panel2:#1f1f23;
+  --muted:#adadb8;
+  --yellow:#ffd400;
+}
+
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  background:var(--bg);
+  color:#efeff1;
+  font-family:Arial,Helvetica,sans-serif;
+  overflow-x:hidden;
+}
+
+button,input{font:inherit}
+button{cursor:pointer}
+
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:999999;
+  pointer-events:none;
+  background:repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,.018) 0,
+    rgba(255,255,255,.018) 1px,
+    transparent 2px,
+    transparent 5px
+  );
+}
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+#topbar{
+  height:58px;
+  position:sticky;
+  top:0;
+  z-index:5000;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:0 14px;
+  background:#18181b;
+  box-shadow:0 3px 15px #000;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-size:22px;
+  font-weight:1000;
+  cursor:pointer;
+}
+
+.logoBox{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border-radius:7px;
+  background:#9147ff;
+  transform:skew(-8deg);
+}
+
+.logoText small{
+  display:block;
+  color:#ffd400;
+  font-size:8px;
+  letter-spacing:1px;
+}
+
+.navButton{
+  border:none;
+  padding:9px;
+  background:transparent;
+  color:white;
+  font-weight:bold;
+}
+
+.navButton:hover{background:#303036}
+
+.rightIcons{
+  display:flex;
+  gap:8px;
+}
+
+.iconButton{
+  width:38px;
+  height:38px;
+  border:none;
+  border-radius:7px;
+  background:#303036;
+  color:white;
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.searchArea{
+  flex:1;
+  max-width:620px;
+  margin:auto;
+  display:flex;
+}
+
+#searchInput{
+  flex:1;
+  min-width:0;
+  height:40px;
+  padding:0 14px;
+  border:none;
+  outline:none;
+  border-radius:8px 0 0 8px;
+  background:#303036;
+  color:white;
+}
+
+#searchInput:focus{
+  outline:2px solid #9147ff;
+  background:#111;
+}
+
+#searchButton{
+  width:52px;
+  border:none;
+  border-radius:0 8px 8px 0;
+  background:#46464d;
+  color:white;
+}
+
+.searchRejected{
+  animation:searchRejected .55s linear;
+}
+
+@keyframes searchRejected{
+  0%,100%{transform:translateX(0)}
+  15%{transform:translateX(-18px) rotate(-2deg)}
+  30%{transform:translateX(17px) rotate(2deg)}
+  50%{transform:translateX(-12px)}
+  70%{transform:translateX(10px)}
+  85%{transform:translateX(-5px)}
+}
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+#app{
+  transform-origin:center;
+}
+
+.page{
+  display:grid;
+  grid-template-columns:235px minmax(0,1fr);
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+#sidebar{
+  position:sticky;
+  top:58px;
+  height:calc(100vh - 58px);
+  overflow:auto;
+  padding:10px;
+  background:#1f1f23;
+}
+
+#sidebar h3{
+  margin:8px;
+  font-size:13px;
+}
+
+.sideChannel{
+  width:100%;
+  display:grid;
+  grid-template-columns:36px 1fr auto;
+  gap:8px;
+  align-items:center;
+  padding:7px;
+  border:none;
+  border-radius:7px;
+  background:transparent;
+  color:white;
+  text-align:left;
+}
+
+.sideChannel:hover{background:#303036}
+
+.avatar{
+  width:36px;
+  height:36px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  font-size:11px;
+  font-weight:bold;
+  background:linear-gradient(
+    135deg,
+    hsl(var(--h),90%,65%),
+    hsl(calc(var(--h) + 80),80%,40%)
+  );
+}
+
+.sideName{
+  font-size:13px;
+  font-weight:bold;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.sideGame{
+  color:#adadb8;
+  font-size:11px;
+}
+
+.sideViewer{font-size:11px}
+
+.redDot{
+  display:inline-block;
+  width:8px;
+  height:8px;
+  margin-right:4px;
+  border-radius:50%;
+  background:red;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+main{
+  min-width:0;
+  padding:25px 28px 70px;
+}
+
+.hero{
+  min-height:220px;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  padding:35px;
+  border-radius:12px;
+  background:
+    radial-gradient(circle at 20% 30%,#9147ff99,transparent 35%),
+    radial-gradient(circle at 80% 60%,#00d9ff55,transparent 35%),
+    linear-gradient(135deg,#260c46,#111);
+}
+
+.hero::after{
+  content:"ABSOLUTE RAGEBAIT";
+  position:absolute;
+  right:-42px;
+  top:25px;
+  transform:rotate(15deg);
+  padding:8px 55px;
+  background:#ffd400;
+  color:black;
+  font-weight:1000;
+}
+
+.hero h1{
+  max-width:720px;
+  margin:0 0 15px;
+  font-size:clamp(35px,5vw,65px);
+  line-height:.9;
+}
+
+.hero p{
+  max-width:650px;
+  color:#ddd;
+  line-height:1.5;
+}
+
+.hero button{
+  padding:11px 16px;
+  border:none;
+  border-radius:7px;
+  font-weight:bold;
+}
+
+.sectionTitle{
+  margin:30px 0 15px;
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+#streamGrid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:20px 14px;
+}
+
+.card{
+  min-width:0;
+  position:relative;
+}
+
+.thumbnail{
+  aspect-ratio:16/9;
+  position:relative;
+  overflow:hidden;
+  background:#222;
+  cursor:pointer;
+}
+
+.thumbnail img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+}
+
+.thumbnail:hover{
+  outline:4px solid #9147ff;
+  transform:translate(-3px,-3px);
+  box-shadow:7px 7px #9147ff;
+}
+
+.live{
+  position:absolute;
+  top:8px;
+  left:8px;
+  padding:4px 6px;
+  border-radius:4px;
+  background:#e91916;
+  font-size:11px;
+  font-weight:bold;
+}
+
+.viewers{
+  position:absolute;
+  bottom:8px;
+  left:8px;
+  padding:4px 6px;
+  background:#000c;
+  font-size:11px;
+}
+
+.cardInfo{
+  display:grid;
+  grid-template-columns:38px 1fr;
+  gap:9px;
+  padding-top:9px;
+}
+
+.cardTitle{
+  font-size:14px;
+  font-weight:bold;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.cardChannel,.cardGame{
+  margin-top:3px;
+  color:#adadb8;
+  font-size:12px;
+}
+
+/* =========================================================
+   STREAM
+========================================================= */
+
+#streamView{display:none}
+#streamView.active{display:block}
+#homeView.hidden{display:none}
+
+.streamLayout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 340px;
+  background:#09090b;
+}
+
+#playerStage{
+  position:relative;
+  z-index:10;
+  aspect-ratio:16/9;
+  background:black;
+  transform-origin:center;
+}
+
+#twitch-player,
+#twitch-player iframe{
+  width:100%!important;
+  height:100%!important;
+}
+
+#controlBlocker{
+  position:absolute;
+  z-index:60;
+  left:0;
+  right:0;
+  bottom:0;
+  height:58px;
+  pointer-events:auto;
+}
+
+#playerGlitchOverlay{
+  position:absolute;
+  inset:0;
+  z-index:50;
+  pointer-events:none;
+  opacity:0;
+  background:linear-gradient(
+    90deg,
+    rgba(255,0,60,.25),
+    transparent 25%,
+    rgba(0,220,255,.25)
+  );
+}
+
+#playerWarning{
+  display:none;
+  position:absolute;
+  z-index:75;
+  top:20%;
+  left:50%;
+  padding:8px 13px;
+  border:3px solid black;
+  background:#ffd400;
+  color:black;
+  box-shadow:6px 6px black;
+  font-weight:1000;
+  pointer-events:none;
+}
+
+/* =========================================================
+   FAKE BUFFER
+========================================================= */
+
+#fakeBuffer{
+  display:none;
+  position:absolute;
+  z-index:80;
+  left:50%;
+  top:68%;
+  transform:translate(-50%,-50%);
+  width:min(420px,70%);
+  padding:12px;
+  border:3px solid black;
+  background:#efeff1;
+  color:#111;
+  box-shadow:7px 7px black;
+  font-weight:1000;
+}
+
+.bufferTrack{
+  height:12px;
+  margin-top:8px;
+  background:#bbb;
+  overflow:hidden;
+}
+
+#bufferFill{
+  height:100%;
+  width:0;
+  background:#9147ff;
+}
+
+/* =========================================================
+   STREAM META
+========================================================= */
+
+.streamMeta{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  padding:16px;
+  background:#0e0e10;
+}
+
+#streamTitle{
+  font-size:18px;
+  font-weight:bold;
+}
+
+#streamChannel{
+  margin-top:5px;
+  color:#bf94ff;
+  font-weight:bold;
+}
+
+.controls{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.controls button{
+  padding:10px 13px;
+  border:none;
+  border-radius:7px;
+  color:white;
+  font-weight:bold;
+}
+
+.back{background:#303036}
+.follow{background:#9147ff}
+
+/* =========================================================
+   PUMP VOLUME
+========================================================= */
+
+#pumpButton{
+  min-width:180px;
+  background:#ffd400;
+  color:black;
+  box-shadow:0 6px #9e6b00;
+  user-select:none;
+}
+
+#pumpButton:active{
+  transform:translateY(4px);
+  box-shadow:0 2px #9e6b00;
+}
+
+#pressureText{
+  margin-top:8px;
+  color:#bbb;
+  font-size:11px;
+  text-align:right;
+}
+
+.pressureTrack{
+  width:100%;
+  height:7px;
+  margin-top:4px;
+  overflow:hidden;
+  border-radius:10px;
+  background:#333;
+}
+
+#pressureFill{
+  width:0;
+  height:100%;
+  background:#ffd400;
+  transition:width .04s linear;
+}
+
+/* =========================================================
+   CHAT
+========================================================= */
+
+.chat{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+  border-left:1px solid #333;
+  background:#18181b;
+}
+
+.chatTitle{
+  min-height:46px;
+  display:grid;
+  place-items:center;
+  border-bottom:1px solid #333;
+  font-size:13px;
+  font-weight:bold;
+}
+
+#chatMessages{
+  flex:1;
+  min-height:460px;
+  max-height:620px;
+  overflow-y:auto;
+  padding:12px;
+}
+
+.chatMessage{
+  margin-bottom:10px;
+  font-size:13px;
+  line-height:1.4;
+}
+
+.chatName{
+  color:#bf94ff;
+  font-weight:bold;
+}
+
+.chatSystem{
+  margin:10px 0;
+  padding:8px;
+  border-left:4px solid #ffd400;
+  background:#242428;
+  color:#ddd;
+  font-size:12px;
+}
+
+.chatInputArea{
+  padding:10px;
+  border-top:1px solid #333;
+}
+
+#chatInput{
+  width:100%;
+  height:40px;
+  padding:0 10px;
+  border:2px solid transparent;
+  border-radius:6px;
+  outline:none;
+  background:#303036;
+  color:white;
+}
+
+#chatInput:focus{
+  border-color:#9147ff;
+}
+
+.chatButtons{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:8px;
+}
+
+.chatButtons button{
+  padding:8px 12px;
+  border:none;
+  border-radius:6px;
+  background:#9147ff;
+  color:white;
+  font-weight:bold;
+}
+
+/* =========================================================
+   BLACKOUT
+========================================================= */
+
+#blackout{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:990000;
+  background:black;
+  pointer-events:none;
+}
+
+#blackout.active{
+  display:grid;
+  place-items:center;
+  animation:blackoutAnimation 1.9s ease forwards;
+}
+
+#blackoutText{
+  color:white;
+  font-size:clamp(30px,6vw,72px);
+  font-weight:1000;
+  letter-spacing:4px;
+  text-align:center;
+}
+
+#blackoutText small{
+  display:block;
+  margin-top:15px;
+  color:#555;
+  font-size:13px;
+}
+
+@keyframes blackoutAnimation{
+  0%{opacity:0}
+  8%{opacity:1}
+  68%{opacity:1}
+  100%{opacity:0}
+}
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+#notificationLayer,
+#popupLayer{
+  position:fixed;
+  inset:0;
+  z-index:90000;
+  pointer-events:none;
+}
+
+.notification{
+  position:absolute;
+  width:min(340px,84vw);
+  padding:13px;
+  border:3px solid black;
+  color:black;
+  box-shadow:7px 7px black;
+  font-weight:1000;
+  pointer-events:auto;
+  animation:notificationEnter .25s cubic-bezier(.2,1.6,.3,1);
+}
+
+.notification small{
+  display:block;
+  margin-top:6px;
+  font-weight:normal;
+}
+
+.notification button{
+  position:absolute;
+  top:-12px;
+  right:-12px;
+  width:27px;
+  height:27px;
+  border:2px solid black;
+  border-radius:50%;
+  background:white;
+  font-weight:bold;
+}
+
+@keyframes notificationEnter{
+  from{
+    opacity:0;
+    transform:scale(.1) rotate(-25deg);
+  }
+}
+
+/* =========================================================
+   RAIN
+========================================================= */
+
+.rainNotification{
+  position:fixed;
+  top:-180px;
+  z-index:940000;
+  width:220px;
+  padding:10px;
+  border:3px solid black;
+  color:black;
+  box-shadow:6px 6px black;
+  font-size:12px;
+  font-weight:1000;
+  pointer-events:none;
+  animation:rainFall var(--rainSpeed) linear forwards;
+}
+
+@keyframes rainFall{
+  from{
+    transform:
+      translateY(-180px)
+      translateX(0)
+      rotate(var(--rainRotation));
+  }
+
+  to{
+    transform:
+      translateY(calc(100vh + 300px))
+      translateX(var(--rainDrift))
+      rotate(var(--rainRotation));
+  }
+}
+
+/* =========================================================
+   TSUNAMIS
+========================================================= */
+
+.horizontalWave,
+.reverseHorizontalWave,
+.diagonalWave,
+.upWave{
+  position:fixed;
+  z-index:945000;
+  width:260px;
+  padding:11px;
+  border:3px solid black;
+  color:black;
+  font-weight:1000;
+  pointer-events:none;
+}
+
+.horizontalWave{
+  left:-350px;
+  box-shadow:7px 7px black;
+  animation:hWave var(--waveSpeed) linear forwards;
+}
+
+@keyframes hWave{
+  to{
+    left:calc(100vw + 360px);
+  }
+}
+
+.reverseHorizontalWave{
+  right:-350px;
+  box-shadow:-7px 7px black;
+  animation:reverseWave var(--waveSpeed) linear forwards;
+}
+
+@keyframes reverseWave{
+  to{
+    right:calc(100vw + 360px);
+  }
+}
+
+.diagonalWave{
+  box-shadow:7px 7px black;
+  animation:diagonalWaveMove var(--waveSpeed) linear forwards;
+}
+
+@keyframes diagonalWaveMove{
+  from{
+    transform:translate(0,0) rotate(-8deg);
+  }
+
+  to{
+    transform:
+      translate(
+        calc(100vw + 700px),
+        calc(100vh + 450px)
+      )
+      rotate(10deg);
+  }
+}
+
+.upWave{
+  bottom:-230px;
+  box-shadow:7px -7px black;
+  animation:upWaveMove var(--waveSpeed) linear forwards;
+}
+
+@keyframes upWaveMove{
+  to{
+    transform:
+      translateY(calc(-100vh - 500px))
+      rotate(var(--waveRotation));
+  }
+}
+
+/* =========================================================
+   RGB LCD DAMAGE
+========================================================= */
+
+#lcdDamage{
+  position:fixed;
+  inset:0;
+  z-index:965000;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+.rgbDamageColumn{
+  position:absolute;
+  top:0;
+  height:100vh;
+  opacity:0;
+  overflow:hidden;
+  animation:rgbDamageLife var(--damageTime) ease forwards;
+
+  background:repeating-linear-gradient(
+    90deg,
+    rgba(255,0,70,.88) 0 2px,
+    rgba(0,240,255,.82) 3px 5px,
+    rgba(110,0,255,.82) 6px 8px,
+    rgba(0,255,110,.64) 9px 11px,
+    rgba(255,0,170,.74) 12px 14px
+  );
+
+  box-shadow:
+    -4px 0 9px rgba(255,0,70,.6),
+    4px 0 9px rgba(0,220,255,.65);
+
+  filter:contrast(1.5) saturate(1.7);
+}
+
+.rgbDamageColumn::after{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  background:repeating-linear-gradient(
+    0deg,
+    transparent 0 23px,
+    rgba(255,0,80,.4) 24px,
+    rgba(0,240,255,.5) 27px,
+    rgba(110,0,255,.36) 29px,
+    transparent 32px 47px
+  );
+}
+
+@keyframes rgbDamageLife{
+  0%{
+    opacity:0;
+    transform:translateX(-8px);
+  }
+
+  7%{
+    opacity:.87;
+  }
+
+  30%{
+    opacity:.93;
+    transform:translateX(7px);
+  }
+
+  60%{
+    opacity:.88;
+    transform:translateX(-5px);
+  }
+
+  86%{
+    opacity:.83;
+  }
+
+  100%{
+    opacity:0;
+  }
+}
+
+.deadRGBLine{
+  position:absolute;
+  top:0;
+  height:100vh;
+  opacity:0;
+
+  background:linear-gradient(
+    90deg,
+    #ff004c,
+    #00ffff,
+    #6200ff,
+    #00ff77,
+    #ff00aa
+  );
+
+  box-shadow:
+    -2px 0 5px #ff004c,
+    2px 0 5px #00ffff;
+
+  animation:deadRGBLineLife var(--damageTime) ease forwards;
+}
+
+@keyframes deadRGBLineLife{
+  0%{opacity:0}
+  10%{opacity:.9}
+  86%{opacity:.84}
+  100%{opacity:0}
+}
+
+.lcdTear{
+  position:absolute;
+  left:0;
+  width:100vw;
+  height:var(--tearHeight);
+  opacity:0;
+
+  background:linear-gradient(
+    90deg,
+    rgba(255,0,80,.55),
+    rgba(0,255,255,.38),
+    rgba(98,0,255,.55),
+    rgba(0,255,110,.4)
+  );
+
+  mix-blend-mode:screen;
+
+  animation:lcdTearLife var(--damageTime) ease forwards;
+}
+
+@keyframes lcdTearLife{
+  0%{
+    opacity:0;
+    transform:translateX(-35px);
+  }
+
+  10%{
+    opacity:.5;
+  }
+
+  38%{
+    transform:translateX(28px);
+  }
+
+  65%{
+    transform:translateX(-18px);
+  }
+
+  87%{
+    opacity:.42;
+  }
+
+  100%{
+    opacity:0;
+  }
+}
+
+/* =========================================================
+   NEW: DARAAR / SCREEN FRACTURE
+========================================================= */
+
+/*
+   SVG crack layer.
+   Highest enough to draw over the website,
+   but below the final scanline body overlay.
+*/
+
+#fractureLayer{
+  position:fixed;
+  inset:0;
+  z-index:996000;
+  pointer-events:none;
+  display:none;
+}
+
+#fractureSVG{
+  width:100%;
+  height:100%;
+  overflow:visible;
+}
+
+/*
+   Main crack is pale,
+   with cyan/red offset copies underneath.
+
+   Gives a broken LCD glass + RGB separation look
+   without doing a strobe.
+*/
+
+.fractureShadowRed{
+  fill:none;
+  stroke:#ff174c;
+  stroke-width:8;
+  opacity:.48;
+  filter:drop-shadow(0 0 4px #ff174c);
+}
+
+.fractureShadowCyan{
+  fill:none;
+  stroke:#00eaff;
+  stroke-width:7;
+  opacity:.5;
+  filter:drop-shadow(0 0 4px #00eaff);
+}
+
+.fractureMain{
+  fill:none;
+  stroke:#f7fbff;
+  stroke-width:3;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  filter:
+    drop-shadow(0 0 2px white)
+    drop-shadow(0 0 6px rgba(255,255,255,.55));
+}
+
+/*
+   Little branches growing away from
+   the main fracture.
+*/
+
+.fractureBranch{
+  fill:none;
+  stroke:#d7fbff;
+  stroke-width:1.5;
+  opacity:.7;
+  stroke-linecap:round;
+  filter:drop-shadow(0 0 3px #00d9ff);
+}
+
+/*
+   Once the crack finishes,
+   two copies of the visible page appear,
+   each clipped to its respective side.
+
+   They then travel away from one another.
+*/
+
+#screenSplitLayer{
+  position:fixed;
+  inset:0;
+  z-index:995500;
+  display:none;
+  overflow:hidden;
+  pointer-events:none;
+  background:#020204;
+}
+
+.splitClone{
+  position:absolute;
+  left:0;
+  top:0;
+  width:100vw;
+  min-height:100vh;
+  transform-origin:center;
+  will-change:transform;
+  pointer-events:none;
+}
+
+.splitClone *{
+  pointer-events:none!important;
+}
+
+/*
+   Dark exposed "inside of monitor"
+   visible between the departing halves.
+*/
+
+#fractureVoid{
+  position:fixed;
+  inset:0;
+  z-index:995400;
+  display:none;
+  pointer-events:none;
+  background:
+    radial-gradient(
+      circle at center,
+      #08000e,
+      #000 70%
+    );
+}
+
+#fractureVoid::after{
+  content:"DISPLAY SEPARATION DETECTED";
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%) rotate(-4deg);
+  color:#777;
+  font-size:clamp(18px,3vw,42px);
+  font-weight:1000;
+  letter-spacing:3px;
+  white-space:nowrap;
+}
+
+/*
+   Small impact line where crack finishes.
+*/
+
+.fractureImpact{
+  animation:fractureImpact .35s ease;
+}
+
+@keyframes fractureImpact{
+  0%,100%{
+    filter:none;
+  }
+
+  50%{
+    filter:
+      contrast(1.3)
+      saturate(1.5);
+  }
+}
+
+/* =========================================================
+   SCREEN GLITCH
+========================================================= */
+
+#screenGlitch{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:970000;
+  pointer-events:none;
+
+  background:linear-gradient(
+    90deg,
+    rgba(255,0,60,.16),
+    transparent,
+    rgba(0,210,255,.17)
+  );
+}
+
+.rgbMode{
+  filter:saturate(1.7) contrast(1.18);
+
+  text-shadow:
+    -2px 0 rgba(255,0,0,.65),
+    2px 0 rgba(0,210,255,.65);
+}
+
+/* =========================================================
+   POPUPS
+========================================================= */
+
+.popup{
+  position:absolute;
+  width:min(390px,90vw);
+  border:4px solid black;
+  background:#eee;
+  color:#111;
+  box-shadow:11px 11px black;
+  pointer-events:auto;
+}
+
+.popupHeader{
+  display:flex;
+  justify-content:space-between;
+  padding:7px;
+  background:#111;
+  color:white;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.popupContent{
+  padding:20px;
+  font-weight:bold;
+}
+
+.popupButtons{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  padding:0 13px 13px;
+}
+
+.popupButtons button{
+  padding:7px 10px;
+  border:2px solid black;
+  background:white;
+  font-weight:bold;
+}
+
+/* =========================================================
+   RICKROLL
+========================================================= */
+
+#rickroll{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:999000;
+  padding:20px;
+  place-items:center;
+
+  background:
+    radial-gradient(
+      circle,
+      #43206d,
+      #170324 65%,
+      #030004
+    );
+}
+
+#rickroll.active{
+  display:grid;
+}
+
+.rickBox{
+  width:min(940px,96vw);
+  max-height:95vh;
+  overflow:auto;
+  padding:15px;
+  border:7px solid black;
+  background:white;
+  color:black;
+  box-shadow:17px 17px #ffd400;
+}
+
+.rickBox h1{
+  margin:3px 0 6px;
+  text-align:center;
+  font-size:clamp(28px,5vw,58px);
+}
+
+.rickBox p{
+  text-align:center;
+  font-weight:bold;
+}
+
+.rickVideo{
+  position:relative;
+  aspect-ratio:16/9;
+  border:5px solid black;
+  background:black;
+}
+
+#rickFrame{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  border:none;
+}
+
+.rickButtons{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:13px;
+}
+
+.rickButtons button{
+  padding:12px 17px;
+  border:3px solid black;
+  background:#ffd400;
+  color:black;
+  font-weight:1000;
+}
+
+#rickBack{
+  background:#9147ff;
+  color:white;
+}
+
+/* =========================================================
+   FAKE CURSOR
+========================================================= */
+
+#fakeCursor{
+  display:none;
+  position:fixed;
+  z-index:999700;
+  left:50%;
+  top:50%;
+  width:0;
+  height:0;
+  pointer-events:none;
+}
+
+#fakeCursor::before{
+  content:"";
+  position:absolute;
+  width:0;
+  height:0;
+  border-top:22px solid white;
+  border-right:13px solid transparent;
+  filter:drop-shadow(2px 2px 0 black);
+  transform:rotate(-25deg);
+}
+
+#fakeCursorLabel{
+  position:absolute;
+  left:18px;
+  top:15px;
+  width:150px;
+  padding:5px;
+  background:#ffd400;
+  border:2px solid black;
+  color:black;
+  font-size:10px;
+  font-weight:bold;
+}
+
+/* =========================================================
+   BATTERY
+========================================================= */
+
+#batteryWarning{
+  display:none;
+  position:fixed;
+  z-index:980000;
+  right:25px;
+  top:80px;
+  width:320px;
+  padding:18px;
+  border:5px solid black;
+  background:#efeff1;
+  color:black;
+  box-shadow:10px 10px black;
+}
+
+#batteryWarning h2{
+  margin:0 0 8px;
+}
+
+/* =========================================================
+   FAKE CRASH
+========================================================= */
+
+#crashOverlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:998000;
+  place-items:center;
+  background:rgba(0,0,0,.55);
+}
+
+#crashOverlay.active{
+  display:grid;
+}
+
+.crashBox{
+  width:min(520px,90vw);
+  border:5px solid black;
+  background:#eee;
+  color:#111;
+  box-shadow:15px 15px black;
+}
+
+.crashTitle{
+  padding:8px;
+  background:#222;
+  color:white;
+  font-weight:bold;
+}
+
+.crashBody{
+  padding:24px;
+}
+
+.crashButtons{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  padding:0 20px 20px;
+}
+
+.crashButtons button{
+  position:relative;
+  padding:9px;
+  border:2px solid black;
+  background:white;
+}
+
+/* =========================================================
+   CAPTCHA
+========================================================= */
+
+#captcha{
+  display:none;
+  position:fixed;
+  z-index:998500;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:min(390px,90vw);
+  padding:20px;
+  background:white;
+  color:#111;
+  border:5px solid black;
+  box-shadow:12px 12px black;
+}
+
+#captcha.active{
+  display:block;
+}
+
+.captchaCheck{
+  position:relative;
+  width:42px;
+  height:42px;
+  margin-top:15px;
+  border:4px solid #444;
+  background:#eee;
+}
+
+/* =========================================================
+   MAINTENANCE
+========================================================= */
+
+#maintenance{
+  display:none;
+  position:fixed;
+  z-index:997000;
+  left:50%;
+  top:80px;
+  transform:translateX(-50%);
+  min-width:330px;
+  padding:18px 24px;
+  border:4px solid black;
+  background:#ffd400;
+  color:black;
+  box-shadow:9px 9px black;
+  text-align:center;
+  font-weight:1000;
+}
+
+#maintenanceNumber{
+  font-size:40px;
+}
+
+/* =========================================================
+   METEORS
+========================================================= */
+
+.meteor{
+  position:fixed;
+  z-index:949000;
+  top:-140px;
+  right:-350px;
+  width:240px;
+  padding:10px;
+  border:3px solid black;
+  background:#ff9850;
+  color:black;
+  box-shadow:8px 8px black;
+  font-weight:bold;
+  pointer-events:none;
+}
+
+.meteorBig{
+  width:430px;
+  padding:25px;
+  font-size:24px;
+  border-width:6px;
+}
+
+/* =========================================================
+   TORNADO
+========================================================= */
+
+.tornadoItem{
+  position:fixed;
+  z-index:952000;
+  left:50%;
+  top:50%;
+  width:210px;
+  padding:9px;
+  border:3px solid black;
+  background:#ffd400;
+  color:black;
+  box-shadow:5px 5px black;
+  font-weight:bold;
+  pointer-events:none;
+}
+
+/* =========================================================
+   SYSTEM FLOATERS
+========================================================= */
+
+#floatingChaos{
+  display:none;
+  position:fixed;
+  z-index:940000;
+  padding:10px 18px;
+  border:4px solid black;
+  background:white;
+  color:black;
+  box-shadow:7px 7px black;
+  font-weight:1000;
+  pointer-events:none;
+}
+
+#systemBar{
+  display:none;
+  position:fixed;
+  top:5px;
+  left:50%;
+  z-index:950000;
+  transform:translateX(-50%);
+  padding:6px 12px;
+  border:2px solid black;
+  background:white;
+  color:black;
+  box-shadow:5px 5px black;
+  font-family:monospace;
+  font-size:12px;
+  font-weight:bold;
+}
+
+/* =========================================================
+   TICKER
+========================================================= */
+
+#ticker{
+  position:fixed;
+  left:0;
+  bottom:0;
+  z-index:80000;
+  width:100%;
+  height:29px;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  border-top:3px solid black;
+  background:#ffd400;
+  color:#111;
+  font-weight:1000;
+  white-space:nowrap;
+}
+
+#ticker span{
+  display:inline-block;
+  padding-left:100%;
+  animation:tickerMove 13s linear infinite;
+}
+
+@keyframes tickerMove{
+  to{
+    transform:translateX(-100%);
+  }
+}
+
+/* =========================================================
+   EARTHQUAKE
+========================================================= */
+
+.quake{
+  animation:quake .78s linear;
+}
+
+@keyframes quake{
+  0%,100%{transform:translate(0)}
+  10%{transform:translate(-13px,8px)}
+  20%{transform:translate(11px,-9px)}
+  30%{transform:translate(-9px,-5px)}
+  40%{transform:translate(14px,7px)}
+  50%{transform:translate(-12px,9px)}
+  60%{transform:translate(9px,-8px)}
+  70%{transform:translate(-11px,4px)}
+  80%{transform:translate(8px,8px)}
+  90%{transform:translate(-5px,-4px)}
+}
+
+/* =========================================================
+   VROOM
+========================================================= */
+
+.spinVroom{
+  animation:spinVroom 1.55s cubic-bezier(.15,.8,.2,1);
+}
+
+@keyframes spinVroom{
+  0%{
+    transform:rotate(0) scale(1);
+  }
+
+  32%{
+    transform:rotate(145deg) scale(.82);
+  }
+
+  68%{
+    transform:rotate(300deg) scale(1.08);
+  }
+
+  100%{
+    transform:rotate(360deg) scale(1);
+  }
+}
+
+/* =========================================================
+   PLAYER CHAOS
+========================================================= */
+
+.playerTilt{
+  animation:playerTilt 1.5s ease;
+}
+
+@keyframes playerTilt{
+  0%,100%{
+    transform:rotate(0);
+  }
+
+  30%{
+    transform:rotate(5deg) scale(.94);
+  }
+
+  65%{
+    transform:rotate(-7deg) scale(1.03);
+  }
+}
+
+.playerMirror{
+  animation:playerMirror 1.3s ease;
+}
+
+@keyframes playerMirror{
+  0%,100%{
+    transform:scaleX(1);
+  }
+
+  25%,75%{
+    transform:scaleX(-1);
+  }
+}
+
+.playerSquish{
+  animation:playerSquish 1.3s ease;
+}
+
+@keyframes playerSquish{
+  0%,100%{
+    transform:scale(1);
+  }
+
+  35%{
+    transform:scale(.76,1.13) rotate(-3deg);
+  }
+
+  70%{
+    transform:scale(1.08,.89) rotate(3deg);
+  }
+}
+
+/* =========================================================
+   PAGE TILT
+========================================================= */
+
+.pageTilt{
+  animation:pageTilt 1.6s ease;
+}
+
+@keyframes pageTilt{
+  0%,100%{
+    transform:rotate(0);
+  }
+
+  35%{
+    transform:rotate(2.4deg) scale(.98);
+  }
+
+  70%{
+    transform:rotate(-1.8deg) scale(1.01);
+  }
+}
+
+/* =========================================================
+   LANDSLIDE
+========================================================= */
+
+.landslide{
+  animation:landslide 1.9s cubic-bezier(.25,.75,.25,1);
+}
+
+@keyframes landslide{
+  0%{
+    transform:translate(0,0) rotate(0);
+  }
+
+  15%{
+    transform:translate(-35px,9px) rotate(-1deg);
+  }
+
+  33%{
+    transform:translate(-95px,35px) rotate(-3deg);
+  }
+
+  52%{
+    transform:translate(-145px,80px) rotate(-5deg);
+  }
+
+  70%{
+    transform:translate(45px,20px) rotate(2deg);
+  }
+
+  86%{
+    transform:translate(-18px,7px) rotate(-1deg);
+  }
+
+  100%{
+    transform:translate(0,0) rotate(0);
+  }
+}
+
+.sideEscape{
+  animation:sideEscape 1.5s ease;
+}
+
+@keyframes sideEscape{
+  0%,100%{
+    transform:translateX(0);
+  }
+
+  40%{
+    transform:translateX(-190px);
+  }
+
+  70%{
+    transform:translateX(40px);
+  }
+}
+
+.topFlip{
+  animation:topFlip 1.4s ease;
+}
+
+@keyframes topFlip{
+  0%,100%{
+    transform:rotate(0);
+  }
+
+  40%,70%{
+    transform:rotate(180deg);
+  }
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1100px){
+
+  #streamGrid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+
+  .streamLayout{
+    grid-template-columns:1fr 300px;
+  }
+
+}
+
+@media(max-width:850px){
+
+  .page{
+    grid-template-columns:75px 1fr;
+  }
+
+  #sidebar h3,
+  .sideName,
+  .sideGame,
+  .sideViewer{
+    display:none;
+  }
+
+  .sideChannel{
+    grid-template-columns:1fr;
+  }
+
+  #streamGrid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .streamLayout{
+    grid-template-columns:1fr;
+  }
+
+  .chat{
+    min-height:500px;
+  }
+
+}
+
+@media(max-width:550px){
+
+  main{
+    padding:15px 10px 60px;
+  }
+
+  #streamGrid{
+    grid-template-columns:1fr;
+  }
+
+  .navButton{
+    display:none;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+<header id="topbar">
+
+<div class="logo" id="logo">
+
+  <div class="logoBox">
+    T
+  </div>
+
+  <div class="logoText">
+
+    TWITCHY
+
+    <small>
+      ABSOLUTE RAGEBAIT
+    </small>
+
+  </div>
+
+</div>
+
+<button
+  class="navButton"
+  onclick="showHome()"
+  id="followingNav"
+>
+  Following
+</button>
+
+<button
+  class="navButton"
+  id="browseButton"
+>
+  Browse
+</button>
+
+<div class="searchArea" id="searchArea">
+
+<input
+  id="searchInput"
+  placeholder="Search anything. We dare you."
+  autocomplete="off"
+>
+
+<button id="searchButton">
+  🔎
+</button>
+
+</div>
+
+<div class="rightIcons">
+
+<button
+  id="settingsButton"
+  class="iconButton"
+>
+  ⚙
+</button>
+
+<button
+  class="iconButton"
+  onclick="createPopup()"
+>
+  ✉
+</button>
+
+</div>
+
+</header>
+
+
+<div class="page">
+
+<aside id="sidebar">
+
+<h3 id="sidebarHeading">
+  RECOMMENDED CHANNELS
+</h3>
+
+<div id="sidebarChannels"></div>
+
+</aside>
+
+
+<main>
+
+<section id="homeView">
+
+<div class="hero">
+
+<div>
+
+<h1>
+  Twitch, except the website actively hates you.
+</h1>
+
+<p>
+  The streams work.
+  Everything else has developed weather,
+  gravity, hardware failure and trust issues.
+</p>
+
+<button
+  onclick="randomStream()"
+  id="heroButton"
+>
+  WATCH SOMETHING PROBABLY
+</button>
+
+</div>
+
+</div>
+
+<h2
+  class="sectionTitle"
+  id="sectionTitle"
+>
+  Live channels we think you'll like*
+</h2>
+
+<div id="streamGrid"></div>
+
+</section>
+
+
+<section id="streamView">
+
+<div class="streamLayout">
+
+<div>
+
+<div id="playerStage">
+
+<div id="twitch-player"></div>
+
+<div id="controlBlocker"></div>
+
+<div id="playerGlitchOverlay"></div>
+
+<div id="playerWarning">
+  BUFFERING 117%
+</div>
+
+<div id="fakeBuffer">
+
+<div id="bufferText">
+  BUFFERING: 0%
+</div>
+
+<div class="bufferTrack">
+  <div id="bufferFill"></div>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="streamMeta">
+
+<div>
+
+<div id="streamTitle">
+  Stream
+</div>
+
+<div id="streamChannel">
+  channel
+</div>
+
+</div>
+
+
+<div>
+
+<div class="controls">
+
+<button
+  class="back"
+  onclick="showHome()"
+>
+  ← BACK
+</button>
+
+<button
+  class="follow"
+  id="followButton"
+>
+  ♡ Follow
+</button>
+
+<button id="pumpButton">
+  🔊 PUMP VOLUME
+</button>
+
+</div>
+
+<div id="pressureText">
+  PUMP PRESSURE: 0%
+</div>
+
+<div class="pressureTrack">
+  <div id="pressureFill"></div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<aside class="chat">
+
+<div class="chatTitle">
+  STREAM CHAT — VERY REAL*
+</div>
+
+<div id="chatMessages">
+
+<div class="chatSystem">
+  LOCAL CHAT — messages go absolutely nowhere.
+</div>
+
+</div>
+
+<div class="chatInputArea">
+
+<input
+  id="chatInput"
+  placeholder="Send a message..."
+  autocomplete="off"
+>
+
+<div class="chatButtons">
+
+<button id="chatSend">
+  Chat
+</button>
+
+</div>
+
+</div>
+
+</aside>
+
+</div>
+
+</section>
+
+</main>
+
+</div>
+
+</div>
+
+
+<!-- ======================================================
+     EXISTING EFFECT LAYERS
+======================================================= -->
+
+<div id="blackout">
+
+<div id="blackoutText">
+
+LIGHTS OUT.
+
+<small>
+  locating streamer...
+</small>
+
+</div>
+
+</div>
+
+<div id="notificationLayer"></div>
+<div id="popupLayer"></div>
+<div id="screenGlitch"></div>
+<div id="lcdDamage"></div>
+<div id="floatingChaos"></div>
+<div id="systemBar"></div>
+
+
+<!-- ======================================================
+     NEW FRACTURE / DARAAR LAYERS
+======================================================= -->
+
+<div id="fractureVoid"></div>
+
+<div id="screenSplitLayer"></div>
+
+<div id="fractureLayer">
+
+<svg
+  id="fractureSVG"
+  xmlns="http://www.w3.org/2000/svg"
+  preserveAspectRatio="none"
+>
+
+<path
+  id="fractureRed"
+  class="fractureShadowRed"
+/>
+
+<path
+  id="fractureCyan"
+  class="fractureShadowCyan"
+/>
+
+<path
+  id="fractureMain"
+  class="fractureMain"
+/>
+
+<g id="fractureBranches"></g>
+
+</svg>
+
+</div>
+
+
+<!-- ======================================================
+     FAKE CURSOR
+======================================================= -->
+
+<div id="fakeCursor">
+
+<div id="fakeCursorLabel">
+  DEFINITELY YOUR CURSOR
+</div>
+
+</div>
+
+
+<!-- ======================================================
+     BATTERY
+======================================================= -->
+
+<div id="batteryWarning">
+
+<h2 id="batteryTitle">
+  ⚠ BATTERY 1%
+</h2>
+
+<div id="batteryText">
+  Plug in your laptop immediately.
+</div>
+
+</div>
+
+
+<!-- ======================================================
+     CRASH
+======================================================= -->
+
+<div id="crashOverlay">
+
+<div class="crashBox">
+
+<div class="crashTitle">
+  TWITCHY.exe
+</div>
+
+<div class="crashBody">
+
+<h2>
+  TWITCHY.exe has stopped pretending to work
+</h2>
+
+<p>
+  Windows is searching for absolutely nothing useful.
+</p>
+
+</div>
+
+<div class="crashButtons">
+
+<button
+  id="crashWait"
+  onmouseenter="runAway(this)"
+>
+  Wait for program
+</button>
+
+<button
+  id="crashClose"
+  onmouseenter="runAway(this)"
+>
+  Close program
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ======================================================
+     CAPTCHA
+======================================================= -->
+
+<div id="captcha">
+
+<h2>
+  Prove you're human
+</h2>
+
+<p id="captchaText">
+  Click the checkbox.
+</p>
+
+<button
+  class="captchaCheck"
+  id="captchaCheck"
+></button>
+
+</div>
+
+
+<!-- ======================================================
+     MAINTENANCE
+======================================================= -->
+
+<div id="maintenance">
+
+<div>
+  MAINTENANCE MODE IN
+</div>
+
+<div id="maintenanceNumber">
+  10
+</div>
+
+<div id="maintenanceSub">
+  Please finish panicking.
+</div>
+
+</div>
+
+
+<!-- ======================================================
+     RICKROLL
+======================================================= -->
+
+<div id="rickroll">
+
+<div class="rickBox">
+
+<h1>
+  YOUR SEARCH RESULT
+</h1>
+
+<p>
+  You searched the same thing twice.
+  TWITCHY respects persistence.
+</p>
+
+<div class="rickVideo">
+
+<iframe
+  id="rickFrame"
+  allow="autoplay; encrypted-media; picture-in-picture"
+  allowfullscreen
+></iframe>
+
+</div>
+
+<div class="rickButtons">
+
+<button onclick="playRickrollAgain()">
+  ▶ PLAY THE DEFINITELY NORMAL RESULT
+</button>
+
+<button
+  id="rickBack"
+  onclick="closeRickroll()"
+>
+  ← BACK TO TWITCHY
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ======================================================
+     TICKER
+======================================================= -->
+
+<div id="ticker">
+
+<span>
+
+⚠ ABSOLUTE RAGEBAIT ACTIVE
+
+&nbsp;&nbsp;•&nbsp;&nbsp;
+
+WEATHER: APOCALYPTIC NOTIFICATIONS
+
+&nbsp;&nbsp;•&nbsp;&nbsp;
+
+TSUNAMIS MAY APPROACH FROM ANY DIRECTION
+
+&nbsp;&nbsp;•&nbsp;&nbsp;
+
+GRAVITY DRIVER UNSTABLE
+
+&nbsp;&nbsp;•&nbsp;&nbsp;
+
+LCD PANEL CONDITION: COOKED
+
+&nbsp;&nbsp;•&nbsp;&nbsp;
+
+SCREEN STRUCTURAL INTEGRITY: QUESTIONABLE
+
+&nbsp;&nbsp;•&nbsp;&nbsp;
+
+CHAT MESSAGES SENT DIRECTLY TO NOWHERE
+
+&nbsp;&nbsp;•&nbsp;&nbsp;
+
+TORNADO WATCH IN EFFECT
+
+&nbsp;&nbsp;•&nbsp;&nbsp;
+
+NORMAL VOLUME CONTROLS CONFISCATED
+
+&nbsp;&nbsp;•&nbsp;&nbsp;
+
+</span>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   CHANNELS
+========================================================= */
+
+const channels=[
+
+{name:"rdcgaming",title:"RDC LIVE",game:"Just Chatting",viewers:"12.4K"},
+{name:"maviboiii",title:"late night ranked + chaos",game:"VALORANT",viewers:"1.8K"},
+{name:"wtfslump",title:"WE ARE SO BACK",game:"Just Chatting",viewers:"983"},
+{name:"tyty2nice",title:"locked in",game:"Gaming",viewers:"2.1K"},
+{name:"lofigirl",title:"lofi hip hop radio",game:"Music",viewers:"24.7K"},
+{name:"froggyjolson",title:"the frog is operational",game:"Just Chatting",viewers:"641"},
+{name:"juakynen",title:"LIVE NOW",game:"Sports",viewers:"4.3K"},
+{name:"jonoryan_roundnet",title:"Roundnet live",game:"Sports",viewers:"312"},
+{name:"tokyoviewsontwitch",title:"Tokyo live views",game:"Travel & Outdoors",viewers:"2.8K"},
+{name:"furball_farm",title:"Furball Farm live cam",game:"Animals",viewers:"911"},
+{name:"tacoofwar_",title:"TACTICAL TACO DEPLOYED",game:"Gaming",viewers:"784"},
+{name:"gardenzoo",title:"Garden Zoo Live",game:"Animals",viewers:"1.2K"},
+{name:"momoseventh",title:"momo live",game:"Just Chatting",viewers:"537"},
+{name:"intensechess",title:"Chess but unfortunately intense",game:"Chess",viewers:"3.6K"},
+{name:"mercernarymage",title:"mage hours",game:"Gaming",viewers:"444"},
+{name:"ornicar2",title:"Chess stream",game:"Chess",viewers:"1.1K"},
+{name:"blastpremier",title:"BLAST Premier",game:"Counter-Strike",viewers:"31.8K"},
+{name:"lacy",title:"LIVE",game:"Just Chatting",viewers:"8.7K"},
+{name:"moistcr1tikal",title:"moist live",game:"Just Chatting",viewers:"18.6K"},
+{name:"uhnvod",title:"VOD / Live feed",game:"Just Chatting",viewers:"721"},
+
+{name:"pastil_dota",title:"Dota session",game:"Dota 2",viewers:"2.3K"},
+{name:"mellstroy",title:"MELLSTROY LIVE",game:"Just Chatting",viewers:"37.8K"},
+{name:"triplelift",title:"ranked grind",game:"League of Legends",viewers:"14.5K"},
+{name:"takluz",title:"LIVE NOW",game:"Gaming",viewers:"1.7K"},
+{name:"choc",title:"choc live",game:"Gaming",viewers:"4.9K"},
+{name:"jeefhs",title:"JEef live",game:"Gaming",viewers:"3.1K"},
+{name:"coolbrawlhalla",title:"Brawlhalla tournament",game:"Brawlhalla",viewers:"6.8K"},
+{name:"afrchess",title:"Chess live",game:"Chess",viewers:"1.9K"},
+{name:"radiosei98100",title:"Radio SEI live",game:"Music",viewers:"802"},
+{name:"la_vuelta",title:"La Vuelta live",game:"Sports",viewers:"9.4K"},
+{name:"radioolympia",title:"Radio Olympia",game:"Sports",viewers:"2.6K"},
+{name:"picklebelgiumworldcup",title:"Pickleball World Cup",game:"Sports",viewers:"4.1K"},
+{name:"r3play_live",title:"R3PLAY LIVE",game:"Gaming",viewers:"1.3K"},
+{name:"kitefeel",title:"Kite live",game:"Travel & Outdoors",viewers:"925"},
+{name:"gerardromero",title:"Gerard Romero live",game:"Sports",viewers:"11.7K"}
+
+];
+
+
+/* =========================================================
+   TEXT
+========================================================= */
+
+const notices=[
+
+"WARNING: Mouse detected. Please remove mouse.",
+"Almost there! (not really)",
+"YOUR CAPS ARE LOOSE",
+"Streamer has detected your existence.",
+"Loading complete. Beginning loading.",
+"Your cursor appears suspicious.",
+"Connection excellent. Website unavailable emotionally.",
+"We moved a button. Good luck.",
+"Your preferences have been replaced with ours.",
+"Congratulations! Nothing happened.",
+"UI stability successfully reduced.",
+"Please stop using the website correctly.",
+"Chat is thinking too loudly.",
+"Screen orientation has become a suggestion.",
+"Your monitor appears suspiciously upright.",
+"Nothing requires your attention. This popup does.",
+"We found the stream. Then we lost it.",
+"An unknown error succeeded.",
+"This notification is blocking another notification.",
+"Your mouse violated community guidelines.",
+"Frame rate: yes.",
+"Quality: approximately video.",
+"Please hold your monitor firmly.",
+"Your internet is fine. Unfortunately we are here.",
+"Display driver has left the group chat.",
+"Screen column failure detected.",
+"LCD controller is considering retirement.",
+"Weather forecast: notifications.",
+"Gravity has reached the sidebar.",
+"UI flood warning.",
+"Navigation stability reduced.",
+"Screen integrity: optimistic.",
+"Browser confidence level: 2%.",
+"Pixel alignment has become optional.",
+"TSUNAMI APPROACHING FROM THE WRONG SIDE.",
+"Notification sea level rising.",
+"UPWARD WATER PHYSICS ENABLED.",
+"Your scrollbar is plotting something.",
+"Gravity has been enabled for buttons.",
+"Cursor duplication successful.",
+"Your UI warranty expired eleven seconds ago.",
+"Stream stability: legally questionable.",
+"One or more buttons have escaped.",
+"Humanity verification required.",
+"Your viewer count has become fictional.",
+"Card migration currently underway.",
+"Hairline display fracture detected.",
+"Screen structural integrity reduced.",
+"Please do not touch the crack.",
+"Display currently exists in multiple pieces."
+
+];
+
+
+const searchRoasts=[
+
+"Check your spelling. Yes, we know it's correct.",
+"Did you type that with your elbows?",
+"Search failed. Skill issue detected.",
+"We understood you perfectly. We just refused.",
+"Try typing it again but with confidence this time.",
+"That word looks suspicious. Type it again.",
+"Search request rejected for being too reasonable.",
+"Maybe spell it correctly this time. Yes. We are serious.",
+"No results because we said so.",
+"Are you SURE that's what you meant?",
+"We found results. Then decided you don't deserve them yet.",
+"Please prove you can type the same thing twice.",
+"Interesting spelling choice.",
+"The search engine is currently judging you.",
+"Bro really searched that and expected results.",
+"Try again. Maybe the website will respect you the second time.",
+"Your search has been forwarded directly to the trash.",
+"We asked the database. It laughed.",
+"Search.exe has chosen violence.",
+"Could you type that again? We weren't listening.",
+"Invalid search. Reason: vibes.",
+"That looked correct. Suspiciously correct.",
+"We don't believe you meant that. Do it again.",
+"Our search algorithm says nah.",
+"Request denied. Please demonstrate commitment."
+
+];
+
+
+const chatRoasts=[
+
+"That message travelled zero kilometres and still got lost.",
+"TWITCHY moderation reviewed your message and requested a refund.",
+"Message successfully delivered directly to nowhere.",
+"We forwarded that directly to nobody.",
+"The streamer will never see this. Huge win for them.",
+"Our servers read that and entered airplane mode.",
+"You typed all that just to talk to JavaScript.",
+"Chat has unanimously voted to pretend you never said that.",
+"Even the fake chat left you on read.",
+"The send button would like an apology.",
+"Your message passed validation. Our standards are extremely low.",
+"The database rejected this despite there being no database.",
+"Congratulations. You have successfully messaged yourself.",
+"We asked the streamer for a response. They do not know this website exists.",
+"This message is now available in absolutely zero countries.",
+"The chat server is a div element. You are arguing with a rectangle.",
+"Message delivered to /dev/null with priority shipping."
+
+];
+
+
+const popupMessages=[
+
+"Would you like to enable unnecessary inconvenience?",
+"TWITCHY would like permission to move this window.",
+"Are you sure you meant to click what you clicked?",
+"Rate your experience before experiencing it.",
+"This dialog requires another dialog to close.",
+"Your display is currently facing the correct direction. Fix now?",
+"Accept cookies? We already ate them.",
+"Would you like to continue being interrupted?",
+"Your session is operating normally. This is unacceptable.",
+"Screen repair failed before starting.",
+"Notification weather warning issued.",
+"Please evacuate the navigation bar.",
+"Hairline crack detected. Ignore professionally."
+
+];
+
+
+const notificationColors=[
+
+"#ffd400",
+"#30e7ff",
+"#ff73bc",
+"#73ff8c",
+"#ff9850",
+"#bf94ff",
+"#ffffff"
+
+];
+
+
+const playerMessages=[
+
+"BUFFERING: 117%",
+"ROTATION CALIBRATION",
+"PLEASE HOLD MONITOR",
+"PLAYER ORIENTATION UNSURE",
+"FRAME RATE: YES",
+"QUALITY: PROBABLY",
+"STREAM LOCATED SOMEWHERE",
+"LIVE²",
+"CHAT IS THINKING",
+"LANDSLIDE DETECTED",
+"GRAVITY ERROR",
+"LCD COLUMN FAILURE",
+"PLAYER AERODYNAMICS ENABLED",
+"SCREEN INTEGRITY QUESTIONABLE"
+
+];
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function choose(array){
+
+  return array[
+    Math.floor(
+      Math.random()*array.length
+    )
+  ];
+
+}
+
+
+function random(min,max){
+
+  return Math.random()*(max-min)+min;
+
+}
+
+
+function hostname(){
+
+  return window.location.hostname || "localhost";
+
+}
+
+
+function initials(name){
+
+  return name
+    .replace(/[^a-z0-9]/gi,"")
+    .substring(0,2)
+    .toUpperCase();
+
+}
+
+
+function hue(name){
+
+  let total=0;
+
+  for(const char of name){
+
+    total+=char.charCodeAt(0);
+
+  }
+
+  return total%360;
+
+}
+
+
+function thumbnail(name){
+
+  return `https://static-cdn.jtvnw.net/previews-ttv/live_user_${name}-440x248.jpg`;
+
+}
+
+
+function escapeHTML(text){
+
+  const div=document.createElement("div");
+
+  div.textContent=text;
+
+  return div.innerHTML;
+
+}
+
+
+/* =========================================================
+   MAJOR DISASTER COOLDOWN
+========================================================= */
+
+let majorDisasterBusy=false;
+
+
+function requestMajorDisaster(
+  disasterFunction,
+  disasterName
+){
+
+  if(majorDisasterBusy){
+
+    console.log(
+      "Skipped overlapping major disaster:",
+      disasterName
+    );
+
+    return false;
+
+  }
+
+
+  majorDisasterBusy=true;
+
+
+  disasterFunction();
+
+
+  const cooldown=
+    random(
+      5000,
+      8000
+    );
+
+
+  setTimeout(()=>{
+
+    majorDisasterBusy=false;
+
+  },cooldown);
+
+
+  return true;
+
+}
+
+
+/* =========================================================
+   RENDER STREAMS
+========================================================= */
+
+function renderStreams(){
+
+  const grid=
+    document.getElementById("streamGrid");
+
+
+  grid.innerHTML=
+
+    channels.map(channel=>`
+
+      <div
+        class="card"
+        data-channel="${channel.name}"
+        data-viewers="${channel.viewers}"
+      >
+
+        <div
+          class="thumbnail"
+          onclick="openStream('${channel.name}')"
+          onmouseenter="wrongHoverPreview(this,'${channel.name}')"
+        >
+
+          <img
+            src="${thumbnail(channel.name)}?x=${Date.now()}"
+            data-real="${thumbnail(channel.name)}"
+            alt="${channel.name}"
+            onerror="this.style.opacity='.15'"
+          >
+
+          <div class="live">
+            LIVE*
+          </div>
+
+          <div class="viewers">
+            ${channel.viewers} viewers*
+          </div>
+
+        </div>
+
+
+        <div class="cardInfo">
+
+          <div
+            class="avatar"
+            style="--h:${hue(channel.name)}"
+          >
+            ${initials(channel.name)}
+          </div>
+
+          <div>
+
+            <div class="cardTitle">
+              ${channel.title}
+            </div>
+
+            <div class="cardChannel">
+              ${channel.name}
+            </div>
+
+            <div class="cardGame">
+              ${channel.game}
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+function sidebarHTML(
+  channel,
+  infected=false
+){
+
+  return `
+
+  <button
+    class="sideChannel ${infected ? "infectedClone" : ""}"
+    onclick="openStream('${channel.name}')"
+  >
+
+    <div
+      class="avatar"
+      style="--h:${hue(channel.name)}"
+    >
+      ${initials(channel.name)}
+    </div>
+
+    <div>
+
+      <div class="sideName">
+        ${channel.name}${infected ? " COPY" : ""}
+      </div>
+
+      <div class="sideGame">
+        ${channel.game}
+      </div>
+
+    </div>
+
+    <div class="sideViewer">
+
+      <span class="redDot"></span>
+
+      ${channel.viewers}
+
+    </div>
+
+  </button>
+
+  `;
+
+}
+
+
+function renderSidebar(){
+
+  document
+    .getElementById("sidebarChannels")
+    .innerHTML=
+
+    channels
+      .map(channel=>sidebarHTML(channel))
+      .join("");
+
+}
+
+
+/* =========================================================
+   TWITCH
+========================================================= */
+
+let twitchPlayer=null;
+let currentChannel=null;
+
+
+function openStream(name){
+
+  currentChannel=
+    channels.find(
+      channel=>channel.name===name
+    );
+
+
+  if(!currentChannel){
+
+    return;
+
+  }
+
+
+  blackout();
+
+
+  document
+    .getElementById("homeView")
+    .classList.add("hidden");
+
+
+  document
+    .getElementById("streamView")
+    .classList.add("active");
+
+
+  document
+    .getElementById("streamTitle")
+    .textContent=
+    currentChannel.title;
+
+
+  document
+    .getElementById("streamChannel")
+    .textContent=
+    currentChannel.name;
+
+
+  const holder=
+    document.getElementById("twitch-player");
+
+
+  holder.innerHTML="";
+
+
+  pumpVolume=0;
+
+  updatePump();
+
+
+  if(
+    window.Twitch &&
+    Twitch.Player
+  ){
+
+    twitchPlayer=
+      new Twitch.Player(
+        "twitch-player",
+        {
+          channel:currentChannel.name,
+          width:"100%",
+          height:"100%",
+          parent:[hostname()],
+          autoplay:true,
+          muted:true,
+          controls:false
+        }
+      );
+
+
+    twitchPlayer.addEventListener(
+
+      Twitch.Player.READY,
+
+      ()=>{
+
+        try{
+
+          twitchPlayer.setMuted(true);
+
+          twitchPlayer.setVolume(0);
+
+        }
+
+        catch(error){}
+
+      }
+
+    );
+
+  }
+
+
+  resetFakeChat();
+
+
+  setTimeout(()=>{
+
+    notification(
+
+      "STREAM ACQUIRED",
+
+      `${currentChannel.name} loaded successfully. Extremely unfortunate.`
+
+    );
+
+  },900);
+
+
+  setTimeout(()=>{
+
+    playerMessage();
+
+    lcdDamage();
+
+    fakeBuffering();
+
+  },1600);
+
+}
+
+
+/* =========================================================
+   HOME
+========================================================= */
+
+function showHome(){
+
+  document
+    .getElementById("streamView")
+    .classList.remove("active");
+
+
+  document
+    .getElementById("homeView")
+    .classList.remove("hidden");
+
+
+  try{
+
+    if(twitchPlayer){
+
+      twitchPlayer.setMuted(true);
+
+    }
+
+  }
+
+  catch(error){}
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+function randomStream(){
+
+  openStream(
+    choose(channels).name
+  );
+
+}
+
+
+/* =========================================================
+   BLACKOUT
+========================================================= */
+
+function blackout(){
+
+  const element=
+    document.getElementById("blackout");
+
+
+  element.classList.remove("active");
+
+  void element.offsetWidth;
+
+  element.classList.add("active");
+
+
+  setTimeout(()=>{
+
+    element.classList.remove("active");
+
+  },2000);
+
+}
+
+
+/* =========================================================
+   PUMP VOLUME
+========================================================= */
+
+let pumpVolume=0;
+
+
+setInterval(()=>{
+
+  pumpVolume=
+    Math.max(
+      0,
+      pumpVolume-.018
+    );
+
+
+  applyPumpVolume();
+
+  updatePump();
+
+},70);
+
+
+function pumpVolumeButton(){
+
+  if(!twitchPlayer){
+
+    notification(
+
+      "YOU ARE PUMPING NOTHING",
+
+      "Open a stream first."
+
+    );
+
+    return;
+
+  }
+
+
+  pumpVolume=
+    Math.min(
+      1,
+      pumpVolume+.25
+    );
+
+
+  applyPumpVolume();
+
+  updatePump();
+
+
+  document
+    .getElementById("pumpButton")
+    .animate(
+
+      [
+
+        {transform:"scale(1)"},
+
+        {transform:"scale(1.18) rotate(-3deg)"},
+
+        {transform:"scale(.94) rotate(2deg)"},
+
+        {transform:"scale(1)"}
+
+      ],
+
+      {
+        duration:220
+      }
+
+    );
+
+}
+
+
+function applyPumpVolume(){
+
+  if(!twitchPlayer){
+
+    return;
+
+  }
+
+
+  try{
+
+    if(pumpVolume>0){
+
+      twitchPlayer.setMuted(false);
+
+      twitchPlayer.setVolume(pumpVolume);
+
+    }
+
+    else{
+
+      twitchPlayer.setVolume(0);
+
+      twitchPlayer.setMuted(true);
+
+    }
+
+  }
+
+  catch(error){}
+
+}
+
+
+function updatePump(){
+
+  const percentage=
+    Math.round(
+      pumpVolume*100
+    );
+
+
+  document
+    .getElementById("pressureText")
+    .textContent=
+    `PUMP PRESSURE: ${percentage}%`;
+
+
+  document
+    .getElementById("pressureFill")
+    .style.width=
+    `${percentage}%`;
+
+}
+
+
+/* =========================================================
+   CHAT
+========================================================= */
+
+function resetFakeChat(){
+
+  const area=
+    document.getElementById("chatMessages");
+
+
+  area.innerHTML=`
+
+    <div class="chatSystem">
+
+      LOCAL FAKE CHAT
+
+      <br>
+
+      Messages go absolutely nowhere.
+
+      <br><br>
+
+      Authentication:
+      cleverly avoided.
+
+    </div>
+
+  `;
+
+
+  const messages=[
+
+    ["PixelGoblin","W stream"],
+
+    ["DefinitelyRealViewer","why is my monitor rotating"],
+
+    ["WiFiEnjoyer","bro it's raining notifications"],
+
+    ["KeyboardWarrior","CHAT WORKS TRUST"],
+
+    ["BufferingAt117","117% LETS GOO"],
+
+    ["NotABot247","hello fellow organic humans"]
+
+  ];
+
+
+  messages.forEach(
+
+    ([name,text],index)=>{
+
+      setTimeout(()=>{
+
+        addFakeChatMessage(
+          name,
+          text
+        );
+
+      },index*220);
+
+    }
+
+  );
+
+}
+
+
+function addFakeChatMessage(
+  name,
+  text
+){
+
+  const area=
+    document.getElementById("chatMessages");
+
+
+  const div=
+    document.createElement("div");
+
+
+  div.className=
+    "chatMessage";
+
+
+  div.innerHTML=`
+
+    <span class="chatName">
+
+      ${escapeHTML(name)}:
+
+    </span>
+
+    ${escapeHTML(text)}
+
+  `;
+
+
+  area.appendChild(div);
+
+
+  area.scrollTop=
+    area.scrollHeight;
+
+}
+
+
+function addChatSystem(text){
+
+  const area=
+    document.getElementById("chatMessages");
+
+
+  const div=
+    document.createElement("div");
+
+
+  div.className=
+    "chatSystem";
+
+
+  div.textContent=
+    text;
+
+
+  area.appendChild(div);
+
+
+  area.scrollTop=
+    area.scrollHeight;
+
+}
+
+
+function submitFakeChat(){
+
+  const input=
+    document.getElementById("chatInput");
+
+
+  const text=
+    input.value.trim();
+
+
+  if(!text){
+
+    addChatSystem(
+
+      "You attempted to send silence. Even that failed."
+
+    );
+
+
+    earthquake();
+
+
+    return;
+
+  }
+
+
+  addFakeChatMessage(
+
+    "YouProbably",
+
+    text
+
+  );
+
+
+  input.value="";
+
+
+  setTimeout(()=>{
+
+    const roast=
+      choose(chatRoasts);
+
+
+    addChatSystem(
+      roast
+    );
+
+
+    notification(
+
+      "MESSAGE FAILED SUCCESSFULLY",
+
+      roast
+
+    );
+
+  },random(300,650));
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+let previousSearch="";
+let gaslightLock=false;
+
+
+function search(){
+
+  const input=
+    document.getElementById("searchInput");
+
+
+  const original=
+    input.value.trim();
+
+
+  const query=
+    original.toLowerCase();
+
+
+  if(!query){
+
+    notification(
+
+      "SEARCH FAILED",
+
+      "You searched literally nothing. Incredible."
+
+    );
+
+
+    rejectSearchBar();
+
+    return;
+
+  }
+
+
+  if(query===previousSearch){
+
+    previousSearch="";
+
+    input.value="";
+
+
+    notification(
+
+      "FINE.",
+
+      `You searched "${original}" twice. Clearly this matters deeply.`
+
+    );
+
+
+    earthquake();
+
+
+    setTimeout(
+      openRickroll,
+      500
+    );
+
+
+    return;
+
+  }
+
+
+  previousSearch=
+    query;
+
+
+  notification(
+
+    "CHECK YOUR SPELLING",
+
+    choose(searchRoasts)
+
+  );
+
+
+  rejectSearchBar();
+
+}
+
+
+function rejectSearchBar(){
+
+  const area=
+    document.getElementById("searchArea");
+
+
+  area.classList.remove("searchRejected");
+
+  void area.offsetWidth;
+
+  area.classList.add("searchRejected");
+
+}
+
+
+/* =========================================================
+   SEARCH GASLIGHT
+========================================================= */
+
+function searchGaslight(){
+
+  if(gaslightLock){
+
+    return;
+
+  }
+
+
+  const input=
+    document.getElementById("searchInput");
+
+
+  if(
+    document.activeElement!==input ||
+    input.value.length<4
+  ){
+
+    return;
+
+  }
+
+
+  gaslightLock=true;
+
+
+  const original=
+    input.value;
+
+
+  const chars=
+    original.split("");
+
+
+  const position=
+    Math.floor(
+      Math.random()*
+      (chars.length-1)
+    );
+
+
+  const temp=
+    chars[position];
+
+
+  chars[position]=
+    chars[position+1];
+
+
+  chars[position+1]=
+    temp;
+
+
+  input.value=
+    chars.join("");
+
+
+  setTimeout(()=>{
+
+    input.value=
+      original;
+
+
+    gaslightLock=false;
+
+  },700);
+
+}
+
+
+/* =========================================================
+   RICKROLL
+========================================================= */
+
+function openRickroll(){
+
+  document
+    .getElementById("rickroll")
+    .classList.add("active");
+
+
+  document
+    .getElementById("rickFrame")
+    .src=
+
+    "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0&playsinline=1";
+
+
+  lcdDamage();
+
+  earthquake();
+
+}
+
+
+function playRickrollAgain(){
+
+  const frame=
+    document.getElementById("rickFrame");
+
+
+  frame.src="";
+
+
+  setTimeout(()=>{
+
+    frame.src=
+
+      "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0&playsinline=1";
+
+  },70);
+
+}
+
+
+function closeRickroll(){
+
+  document
+    .getElementById("rickroll")
+    .classList.remove("active");
+
+
+  document
+    .getElementById("rickFrame")
+    .src="";
+
+
+  notification(
+
+    "WELCOME BACK.",
+
+    "The search engine remains permanently compromised."
+
+  );
+
+}
+
+
+/* =========================================================
+   NOTIFICATION
+========================================================= */
+
+function notification(
+  title,
+  subtitle
+){
+
+  const element=
+    document.createElement("div");
+
+
+  element.className=
+    "notification";
+
+
+  element.style.background=
+    choose(notificationColors);
+
+
+  element.style.left=
+
+    random(
+      10,
+      Math.max(
+        20,
+        innerWidth-360
+      )
+    )
+    +"px";
+
+
+  element.style.top=
+
+    random(
+      65,
+      Math.max(
+        80,
+        innerHeight-180
+      )
+    )
+    +"px";
+
+
+  element.innerHTML=`
+
+    <button>
+      ×
+    </button>
+
+    ${title || choose(notices)}
+
+    <small>
+
+      ${
+        subtitle ||
+        choose([
+          "No action required. We recommend confusion.",
+          "Status: unnecessarily urgent.",
+          "Closing this may encourage it.",
+          "TWITCHY is operating exactly as badly as intended."
+        ])
+      }
+
+    </small>
+
+  `;
+
+
+  element
+    .querySelector("button")
+    .onclick=
+    ()=>{
+
+      if(Math.random()<.68){
+
+        element.remove();
+
+      }
+
+      else{
+
+        element
+          .querySelector("small")
+          .textContent=
+          "NICE TRY.";
+
+
+        element.style.left=
+
+          random(
+            10,
+            Math.max(
+              20,
+              innerWidth-350
+            )
+          )
+          +"px";
+
+      }
+
+    };
+
+
+  document
+    .getElementById("notificationLayer")
+    .appendChild(element);
+
+
+  setTimeout(()=>{
+
+    if(element.isConnected){
+
+      element.remove();
+
+    }
+
+  },7000);
+
+}
+
+
+/* =========================================================
+   NOTIFICATION GRAVITY
+========================================================= */
+
+function notificationGravity(){
+
+  const notifications=[
+
+    ...document
+      .querySelectorAll(".notification")
+
+  ];
+
+
+  notifications.forEach(
+
+    (element,index)=>{
+
+      setTimeout(()=>{
+
+        element.animate(
+
+          [
+
+            {
+              transform:
+                "translateY(0) rotate(0)"
+            },
+
+            {
+              transform:
+                `translateY(${innerHeight+300}px) rotate(${random(-180,180)}deg)`
+            }
+
+          ],
+
+          {
+            duration:1400,
+            easing:"cubic-bezier(.5,0,1,1)"
+          }
+
+        );
+
+      },index*70);
+
+    }
+
+  );
+
+}
+
+
+/* =========================================================
+   RAIN
+========================================================= */
+
+function createRainDrop(){
+
+  const element=
+    document.createElement("div");
+
+
+  element.className=
+    "rainNotification";
+
+
+  element.style.left=
+
+    random(
+      -40,
+      innerWidth-190
+    )
+    +"px";
+
+
+  element.style.background=
+    choose(notificationColors);
+
+
+  element.style.setProperty(
+
+    "--rainSpeed",
+
+    random(
+      2.2,
+      4.1
+    )
+    +"s"
+
+  );
+
+
+  element.style.setProperty(
+
+    "--rainRotation",
+
+    random(
+      -8,
+      8
+    )
+    +"deg"
+
+  );
+
+
+  element.style.setProperty(
+
+    "--rainDrift",
+
+    random(
+      -90,
+      90
+    )
+    +"px"
+
+  );
+
+
+  element.textContent=
+    choose(notices);
+
+
+  document.body.appendChild(element);
+
+
+  setTimeout(()=>{
+
+    element.remove();
+
+  },4500);
+
+}
+
+
+function notificationRainstorm(){
+
+  notification(
+
+    "⚠ EXTREME NOTIFICATION RAINFALL",
+
+    "Visibility approximately zero."
+
+  );
+
+
+  for(
+    let i=0;
+    i<42;
+    i++
+  ){
+
+    setTimeout(
+      createRainDrop,
+      i*60
+    );
+
+  }
+
+
+  setTimeout(()=>{
+
+    for(
+      let i=0;
+      i<28;
+      i++
+    ){
+
+      setTimeout(
+        createRainDrop,
+        i*55
+      );
+
+    }
+
+  },1200);
+
+}
+
+
+/* =========================================================
+   WAVE SPAWNER
+========================================================= */
+
+function spawnWave(
+  className,
+  amount
+){
+
+  for(
+    let i=0;
+    i<amount;
+    i++
+  ){
+
+    setTimeout(()=>{
+
+      const element=
+        document.createElement("div");
+
+
+      element.className=
+        className;
+
+
+      element.style.background=
+        choose(notificationColors);
+
+
+      element.style.setProperty(
+
+        "--waveSpeed",
+
+        random(
+          2.5,
+          4
+        )
+        +"s"
+
+      );
+
+
+      element.style.setProperty(
+
+        "--waveRotation",
+
+        random(
+          -8,
+          8
+        )
+        +"deg"
+
+      );
+
+
+      element.textContent=
+        choose(notices);
+
+
+      if(
+        className==="horizontalWave" ||
+        className==="reverseHorizontalWave"
+      ){
+
+        element.style.top=
+
+          random(
+            60,
+            Math.max(
+              80,
+              innerHeight-100
+            )
+          )
+          +"px";
+
+      }
+
+
+      if(
+        className==="upWave"
+      ){
+
+        element.style.left=
+
+          random(
+            -20,
+            Math.max(
+              30,
+              innerWidth-220
+            )
+          )
+          +"px";
+
+      }
+
+
+      if(
+        className==="diagonalWave"
+      ){
+
+        element.style.left=
+          (-350-i*25)+"px";
+
+
+        element.style.top=
+          (-170+i*18)+"px";
+
+      }
+
+
+      document.body.appendChild(element);
+
+
+      setTimeout(()=>{
+
+        element.remove();
+
+      },4800);
+
+    },i*80);
+
+  }
+
+}
+
+
+/* =========================================================
+   TSUNAMIS
+========================================================= */
+
+function horizontalTsunami(){
+
+  notification(
+
+    "⚠ LEFT-SIDE TSUNAMI",
+
+    "Notifications approaching from the west."
+
+  );
+
+
+  spawnWave(
+    "horizontalWave",
+    22
+  );
+
+
+  earthquake();
+
+}
+
+
+function reverseHorizontalTsunami(){
+
+  notification(
+
+    "⚠ RIGHT-SIDE TSUNAMI",
+
+    "The notifications changed their mind."
+
+  );
+
+
+  spawnWave(
+    "reverseHorizontalWave",
+    22
+  );
+
+
+  earthquake();
+
+}
+
+
+function upwardTsunami(){
+
+  notification(
+
+    "⚠ WATER PHYSICS FAILURE",
+
+    "The tsunami is going upward now."
+
+  );
+
+
+  spawnWave(
+    "upWave",
+    25
+  );
+
+}
+
+
+function diagonalTsunami(){
+
+  notification(
+
+    "⚠ DIAGONAL TSUNAMI",
+
+    "Direction regulations have been abolished."
+
+  );
+
+
+  spawnWave(
+    "diagonalWave",
+    20
+  );
+
+
+  setTimeout(
+    earthquake,
+    400
+  );
+
+}
+
+
+/* =========================================================
+   LCD DAMAGE — ~50%
+========================================================= */
+
+function lcdDamage(){
+
+  const layer=
+    document.getElementById("lcdDamage");
+
+
+  let coverage=0;
+
+
+  const target=
+    random(
+      .48,
+      .56
+    );
+
+
+  while(
+    coverage<target
+  ){
+
+    const element=
+      document.createElement("div");
+
+
+    element.className=
+      "rgbDamageColumn";
+
+
+    const width=
+      random(
+        3.5,
+        8
+      );
+
+
+    coverage+=
+      width/100;
+
+
+    element.style.left=
+      random(0,94)+"%";
+
+
+    element.style.width=
+      width+"vw";
+
+
+    const duration=
+      random(
+        2.5,
+        3.7
+      );
+
+
+    element.style.setProperty(
+      "--damageTime",
+      duration+"s"
+    );
+
+
+    layer.appendChild(element);
+
+
+    setTimeout(()=>{
+
+      element.remove();
+
+    },duration*1000+300);
+
+  }
+
+
+  for(
+    let i=0;
+    i<20;
+    i++
+  ){
+
+    const line=
+      document.createElement("div");
+
+
+    line.className=
+      "deadRGBLine";
+
+
+    line.style.left=
+      random(0,99)+"%";
+
+
+    line.style.width=
+      random(1,5)+"px";
+
+
+    const duration=
+      random(
+        2.5,
+        3.7
+      );
+
+
+    line.style.setProperty(
+      "--damageTime",
+      duration+"s"
+    );
+
+
+    layer.appendChild(line);
+
+
+    setTimeout(()=>{
+
+      line.remove();
+
+    },duration*1000+300);
+
+  }
+
+
+  for(
+    let i=0;
+    i<6;
+    i++
+  ){
+
+    const tear=
+      document.createElement("div");
+
+
+    tear.className=
+      "lcdTear";
+
+
+    tear.style.top=
+      random(5,94)+"%";
+
+
+    tear.style.setProperty(
+      "--tearHeight",
+      random(8,28)+"px"
+    );
+
+
+    const duration=
+      random(
+        2.5,
+        3.6
+      );
+
+
+    tear.style.setProperty(
+      "--damageTime",
+      duration+"s"
+    );
+
+
+    layer.appendChild(tear);
+
+
+    setTimeout(()=>{
+
+      tear.remove();
+
+    },duration*1000+300);
+
+  }
+
+}
+
+
+/* =========================================================
+   NEW DARAAR / SCREEN FRACTURE
+========================================================= */
+
+let fractureRunning=false;
+
+
+/*
+   Generate a jagged line between any two edges.
+
+   Modes:
+   verticalDown   = top -> bottom
+   verticalUp     = bottom -> top
+   horizontalRight = left -> right
+   horizontalLeft  = right -> left
+   diagonalDown    = upper-left-ish -> lower-right-ish
+   diagonalUp      = lower-left-ish -> upper-right-ish
+*/
+
+function buildFracturePath(mode){
+
+  const width=
+    window.innerWidth;
+
+
+  const height=
+    window.innerHeight;
+
+
+  const points=[];
+
+
+  let startX;
+  let startY;
+  let endX;
+  let endY;
+
+
+  if(mode==="verticalDown"){
+
+    startX=random(
+      width*.18,
+      width*.82
+    );
+
+    startY=-10;
+
+    endX=
+      startX+
+      random(-width*.16,width*.16);
+
+    endY=
+      height+10;
+
+  }
+
+
+  else if(mode==="verticalUp"){
+
+    startX=random(
+      width*.18,
+      width*.82
+    );
+
+    startY=
+      height+10;
+
+    endX=
+      startX+
+      random(-width*.16,width*.16);
+
+    endY=-10;
+
+  }
+
+
+  else if(mode==="horizontalRight"){
+
+    startX=-10;
+
+    startY=random(
+      height*.18,
+      height*.82
+    );
+
+    endX=
+      width+10;
+
+    endY=
+      startY+
+      random(-height*.18,height*.18);
+
+  }
+
+
+  else if(mode==="horizontalLeft"){
+
+    startX=
+      width+10;
+
+    startY=random(
+      height*.18,
+      height*.82
+    );
+
+    endX=-10;
+
+    endY=
+      startY+
+      random(-height*.18,height*.18);
+
+  }
+
+
+  else if(mode==="diagonalDown"){
+
+    startX=random(
+      -20,
+      width*.18
+    );
+
+    startY=random(
+      -20,
+      height*.22
+    );
+
+    endX=random(
+      width*.82,
+      width+20
+    );
+
+    endY=random(
+      height*.78,
+      height+20
+    );
+
+  }
+
+
+  else{
+
+    startX=random(
+      -20,
+      width*.18
+    );
+
+    startY=random(
+      height*.78,
+      height+20
+    );
+
+    endX=random(
+      width*.82,
+      width+20
+    );
+
+    endY=random(
+      -20,
+      height*.22
+    );
+
+  }
+
+
+  const segments=
+    Math.floor(
+      random(
+        14,
+        21
+      )
+    );
+
+
+  for(
+    let i=0;
+    i<=segments;
+    i++
+  ){
+
+    const progress=
+      i/segments;
+
+
+    let x=
+      startX+
+      (endX-startX)*progress;
+
+
+    let y=
+      startY+
+      (endY-startY)*progress;
+
+
+    /*
+       Middle points get jagged displacement.
+
+       Ends stay close to their actual edges.
+    */
+
+    const edgeFade=
+      Math.sin(
+        progress*Math.PI
+      );
+
+
+    if(
+      mode==="verticalDown" ||
+      mode==="verticalUp"
+    ){
+
+      x+=
+        random(
+          -42,
+          42
+        )
+        *
+        edgeFade;
+
+      y+=
+        random(
+          -5,
+          5
+        );
+
+    }
+
+
+    else if(
+      mode==="horizontalRight" ||
+      mode==="horizontalLeft"
+    ){
+
+      y+=
+        random(
+          -38,
+          38
+        )
+        *
+        edgeFade;
+
+      x+=
+        random(
+          -5,
+          5
+        );
+
+    }
+
+
+    else{
+
+      x+=
+        random(
+          -34,
+          34
+        )
+        *
+        edgeFade;
+
+      y+=
+        random(
+          -34,
+          34
+        )
+        *
+        edgeFade;
+
+    }
+
+
+    points.push({
+      x,
+      y
+    });
+
+  }
+
+
+  return {
+    mode,
+    points,
+    startX,
+    startY,
+    endX,
+    endY
+  };
+
+}
+
+
+/*
+   Convert points to SVG path syntax.
+*/
+
+function fracturePathString(points){
+
+  if(!points.length){
+
+    return "";
+
+  }
+
+
+  let path=
+    `M ${points[0].x} ${points[0].y}`;
+
+
+  for(
+    let i=1;
+    i<points.length;
+    i++
+  ){
+
+    path+=
+      ` L ${points[i].x} ${points[i].y}`;
+
+  }
+
+
+  return path;
+
+}
+
+
+/*
+   Draw little secondary cracks
+   from random positions along the main line.
+*/
+
+function addFractureBranches(points){
+
+  const group=
+    document.getElementById(
+      "fractureBranches"
+    );
+
+
+  group.innerHTML="";
+
+
+  const branchCount=
+    Math.floor(
+      random(
+        6,
+        11
+      )
+    );
+
+
+  for(
+    let i=0;
+    i<branchCount;
+    i++
+  ){
+
+    const index=
+      Math.floor(
+        random(
+          2,
+          points.length-2
+        )
+      );
+
+
+    const source=
+      points[index];
+
+
+    const angle=
+      random(
+        0,
+        Math.PI*2
+      );
+
+
+    const length=
+      random(
+        25,
+        85
+      );
+
+
+    const midX=
+      source.x+
+      Math.cos(angle)*
+      length*.52+
+      random(-12,12);
+
+
+    const midY=
+      source.y+
+      Math.sin(angle)*
+      length*.52+
+      random(-12,12);
+
+
+    const endX=
+      source.x+
+      Math.cos(angle)*
+      length;
+
+
+    const endY=
+      source.y+
+      Math.sin(angle)*
+      length;
+
+
+    const branch=
+      document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "path"
+      );
+
+
+    branch.setAttribute(
+      "class",
+      "fractureBranch"
+    );
+
+
+    branch.setAttribute(
+      "d",
+      `M ${source.x} ${source.y} L ${midX} ${midY} L ${endX} ${endY}`
+    );
+
+
+    group.appendChild(branch);
+
+
+    const total=
+      branch.getTotalLength();
+
+
+    branch.style.strokeDasharray=
+      total;
+
+
+    branch.style.strokeDashoffset=
+      total;
+
+
+    branch.animate(
+
+      [
+
+        {
+          strokeDashoffset:total
+        },
+
+        {
+          strokeDashoffset:0
+        }
+
+      ],
+
+      {
+        duration:
+          random(
+            500,
+            1100
+          ),
+
+        delay:
+          random(
+            500,
+            1600
+          ),
+
+        fill:"forwards",
+
+        easing:"ease-out"
+
+      }
+
+    );
+
+  }
+
+}
+
+
+/*
+   Build approximate clip polygons for
+   the two broken halves.
+
+   It does not need to mathematically follow every
+   tiny jagged point — the crack SVG itself does that.
+   The split follows the overall fracture direction.
+*/
+
+function fractureClipPaths(data){
+
+  const width=
+    window.innerWidth;
+
+
+  const height=
+    window.innerHeight;
+
+
+  const mode=
+    data.mode;
+
+
+  /*
+     Vertical cracks produce LEFT / RIGHT halves.
+  */
+
+  if(
+    mode==="verticalDown" ||
+    mode==="verticalUp"
+  ){
+
+    const topX=
+      Math.max(
+        0,
+        Math.min(
+          100,
+          data.startX/width*100
+        )
+      );
+
+
+    const bottomX=
+      Math.max(
+        0,
+        Math.min(
+          100,
+          data.endX/width*100
+        )
+      );
+
+
+    return {
+
+      first:
+        `polygon(0 0, ${topX}% 0, ${bottomX}% 100%, 0 100%)`,
+
+      second:
+        `polygon(${topX}% 0, 100% 0, 100% 100%, ${bottomX}% 100%)`,
+
+      firstMove:
+        {
+          x:-42,
+          y:random(-18,18),
+          rotate:random(-2.5,-.5)
+        },
+
+      secondMove:
+        {
+          x:42,
+          y:random(-18,18),
+          rotate:random(.5,2.5)
+        }
+
+    };
+
+  }
+
+
+  /*
+     Horizontal cracks produce TOP / BOTTOM halves.
+  */
+
+  if(
+    mode==="horizontalRight" ||
+    mode==="horizontalLeft"
+  ){
+
+    const leftY=
+      Math.max(
+        0,
+        Math.min(
+          100,
+          data.startY/height*100
+        )
+      );
+
+
+    const rightY=
+      Math.max(
+        0,
+        Math.min(
+          100,
+          data.endY/height*100
+        )
+      );
+
+
+    return {
+
+      first:
+        `polygon(0 0, 100% 0, 100% ${rightY}%, 0 ${leftY}%)`,
+
+      second:
+        `polygon(0 ${leftY}%, 100% ${rightY}%, 100% 100%, 0 100%)`,
+
+      firstMove:
+        {
+          x:random(-20,20),
+          y:-45,
+          rotate:random(-2,2)
+        },
+
+      secondMove:
+        {
+          x:random(-20,20),
+          y:45,
+          rotate:random(-2,2)
+        }
+
+    };
+
+  }
+
+
+  /*
+     Diagonal down: TL -> BR.
+  */
+
+  if(
+    mode==="diagonalDown"
+  ){
+
+    return {
+
+      first:
+        `polygon(0 0, 100% 0, 100% 100%, 82% 100%, 0 22%)`,
+
+      second:
+        `polygon(0 22%, 82% 100%, 0 100%)`,
+
+      firstMove:
+        {
+          x:35,
+          y:-35,
+          rotate:random(.5,2.5)
+        },
+
+      secondMove:
+        {
+          x:-35,
+          y:35,
+          rotate:random(-2.5,-.5)
+        }
+
+    };
+
+  }
+
+
+  /*
+     Diagonal up: BL -> TR.
+  */
+
+  return {
+
+    first:
+      `polygon(0 0, 82% 0, 0 78%)`,
+
+    second:
+      `polygon(82% 0, 100% 0, 100% 100%, 0 100%, 0 78%)`,
+
+    firstMove:
+      {
+        x:-35,
+        y:-35,
+        rotate:random(-2.5,-.5)
+      },
+
+    secondMove:
+      {
+        x:35,
+        y:35,
+        rotate:random(.5,2.5)
+      }
+
+  };
+
+}
+
+
+/*
+   Make the visible webpage into two temporary clones.
+
+   The real #app is hidden only for the split phase,
+   then instantly restored.
+*/
+
+function splitScreenAfterFracture(data){
+
+  const realApp=
+    document.getElementById("app");
+
+
+  const layer=
+    document.getElementById("screenSplitLayer");
+
+
+  const voidLayer=
+    document.getElementById("fractureVoid");
+
+
+  /*
+     Clean any old split remnants first.
+  */
+
+  layer.innerHTML="";
+
+
+  const first=
+    realApp.cloneNode(true);
+
+
+  const second=
+    realApp.cloneNode(true);
+
+
+  /*
+     Remove IDs so these temporary visual copies
+     never interfere with getElementById.
+  */
+
+  function sanitizeClone(clone){
+
+    clone.removeAttribute("id");
+
+
+    clone
+      .querySelectorAll("[id]")
+      .forEach(
+        element=>
+          element.removeAttribute("id")
+      );
+
+
+    clone
+      .querySelectorAll("iframe")
+      .forEach(
+        frame=>{
+
+          /*
+             Keep split lightweight.
+
+             Replace cloned iframe with a dark block,
+             while everything else still looks like
+             the active site.
+          */
+
+          const placeholder=
+            document.createElement("div");
+
+
+          placeholder.style.width=
+            "100%";
+
+
+          placeholder.style.height=
+            "100%";
+
+
+          placeholder.style.background=
+            "#050505";
+
+
+          frame.replaceWith(
+            placeholder
+          );
+
+        }
+      );
+
+
+    clone
+      .querySelectorAll("script")
+      .forEach(
+        script=>script.remove()
+      );
+
+  }
+
+
+  sanitizeClone(first);
+
+  sanitizeClone(second);
+
+
+  first.classList.add(
+    "splitClone"
+  );
+
+
+  second.classList.add(
+    "splitClone"
+  );
+
+
+  /*
+     Preserve current scrolling position
+     inside the fixed overlay.
+  */
+
+  first.style.top=
+    (-window.scrollY)+"px";
+
+
+  second.style.top=
+    (-window.scrollY)+"px";
+
+
+  const split=
+    fractureClipPaths(data);
+
+
+  first.style.clipPath=
+    split.first;
+
+
+  second.style.clipPath=
+    split.second;
+
+
+  layer.appendChild(first);
+
+  layer.appendChild(second);
+
+
+  layer.style.display=
+    "block";
+
+
+  voidLayer.style.display=
+    "block";
+
+
+  /*
+     Hide the real page for ~1 second.
+     Twitch audio/player object itself remains alive;
+     this is purely visual.
+  */
+
+  realApp.style.visibility=
+    "hidden";
+
+
+  const firstMove=
+    split.firstMove;
+
+
+  const secondMove=
+    split.secondMove;
+
+
+  first.animate(
+
+    [
+
+      {
+        transform:
+          "translate(0,0) rotate(0deg)"
+      },
+
+      {
+        transform:
+          `translate(${firstMove.x}px,${firstMove.y}px) rotate(${firstMove.rotate}deg)`
+      },
+
+      {
+        transform:
+          `translate(${firstMove.x*2.8}px,${firstMove.y*2.8}px) rotate(${firstMove.rotate*2}deg)`
+      }
+
+    ],
+
+    {
+      duration:1100,
+      easing:"cubic-bezier(.3,.7,.2,1)",
+      fill:"forwards"
+    }
+
+  );
+
+
+  second.animate(
+
+    [
+
+      {
+        transform:
+          "translate(0,0) rotate(0deg)"
+      },
+
+      {
+        transform:
+          `translate(${secondMove.x}px,${secondMove.y}px) rotate(${secondMove.rotate}deg)`
+      },
+
+      {
+        transform:
+          `translate(${secondMove.x*2.8}px,${secondMove.y*2.8}px) rotate(${secondMove.rotate*2}deg)`
+      }
+
+    ],
+
+    {
+      duration:1100,
+      easing:"cubic-bezier(.3,.7,.2,1)",
+      fill:"forwards"
+    }
+
+  );
+
+
+  /*
+     Snap everything back.
+  */
+
+  setTimeout(()=>{
+
+    layer.style.display=
+      "none";
+
+
+    layer.innerHTML="";
+
+
+    voidLayer.style.display=
+      "none";
+
+
+    realApp.style.visibility=
+      "visible";
+
+
+    realApp.classList.add(
+      "fractureImpact"
+    );
+
+
+    setTimeout(()=>{
+
+      realApp.classList.remove(
+        "fractureImpact"
+      );
+
+    },400);
+
+
+    earthquake();
+
+
+    notification(
+
+      "DISPLAY REASSEMBLED",
+
+      "Structural warranty remains void."
+
+    );
+
+
+    fractureRunning=false;
+
+  },1250);
+
+}
+
+
+/*
+   MAIN FRACTURE EVENT.
+*/
+
+function screenFracture(){
+
+  if(fractureRunning){
+
+    return;
+
+  }
+
+
+  fractureRunning=true;
+
+
+  const modes=[
+
+    "verticalDown",
+
+    "verticalUp",
+
+    "horizontalRight",
+
+    "horizontalLeft",
+
+    "diagonalDown",
+
+    "diagonalUp"
+
+  ];
+
+
+  const mode=
+    choose(modes);
+
+
+  const data=
+    buildFracturePath(mode);
+
+
+  const pathString=
+    fracturePathString(
+      data.points
+    );
+
+
+  const layer=
+    document.getElementById(
+      "fractureLayer"
+    );
+
+
+  const main=
+    document.getElementById(
+      "fractureMain"
+    );
+
+
+  const red=
+    document.getElementById(
+      "fractureRed"
+    );
+
+
+  const cyan=
+    document.getElementById(
+      "fractureCyan"
+    );
+
+
+  /*
+     Red/cyan copies are slightly translated
+     so it looks like a damaged LCD fracture.
+  */
+
+  main.setAttribute(
+    "d",
+    pathString
+  );
+
+
+  red.setAttribute(
+    "d",
+    pathString
+  );
+
+
+  cyan.setAttribute(
+    "d",
+    pathString
+  );
+
+
+  red.setAttribute(
+    "transform",
+    `translate(${random(-4,-2)} ${random(-2,2)})`
+  );
+
+
+  cyan.setAttribute(
+    "transform",
+    `translate(${random(2,4)} ${random(-2,2)})`
+  );
+
+
+  layer.style.display=
+    "block";
+
+
+  /*
+     Animate all three main paths
+     using stroke-dashoffset.
+  */
+
+  const length=
+    main.getTotalLength();
+
+
+  [main,red,cyan]
+    .forEach(path=>{
+
+      path.style.strokeDasharray=
+        length;
+
+
+      path.style.strokeDashoffset=
+        length;
+
+
+      path.animate(
+
+        [
+
+          {
+            strokeDashoffset:length
+          },
+
+          {
+            strokeDashoffset:0
+          }
+
+        ],
+
+        {
+          duration:2200,
+          easing:"cubic-bezier(.25,.7,.35,1)",
+          fill:"forwards"
+        }
+
+      );
+
+    });
+
+
+  addFractureBranches(
+    data.points
+  );
+
+
+  notification(
+
+    "⚠ HAIRLINE FRACTURE DETECTED",
+
+    "Please do not allow it to reach the other side."
+
+  );
+
+
+  /*
+     Small tremors during propagation.
+  */
+
+  setTimeout(()=>{
+
+    earthquake();
+
+  },800);
+
+
+  setTimeout(()=>{
+
+    screenGlitch();
+
+  },1550);
+
+
+  /*
+     At 2.2 seconds the crack reaches
+     the opposite edge.
+  */
+
+  setTimeout(()=>{
+
+    notification(
+
+      "STRUCTURAL FAILURE",
+
+      "The screen has successfully become plural."
+
+    );
+
+
+    /*
+       Hide SVG crack just as
+       the screen separates.
+    */
+
+    layer.style.display=
+      "none";
+
+
+    document
+      .getElementById("fractureBranches")
+      .innerHTML="";
+
+
+    splitScreenAfterFracture(
+      data
+    );
+
+  },2250);
+
+}
+
+
+/* =========================================================
+   EARTHQUAKE
+========================================================= */
+
+function earthquake(){
+
+  const app=
+    document.getElementById("app");
+
+
+  app.classList.remove("quake");
+
+  void app.offsetWidth;
+
+  app.classList.add("quake");
+
+
+  setTimeout(()=>{
+
+    app.classList.remove("quake");
+
+  },800);
+
+}
+
+
+/* =========================================================
+   LANDSLIDE
+========================================================= */
+
+function landslide(){
+
+  const app=
+    document.getElementById("app");
+
+
+  app.classList.remove("landslide");
+
+  void app.offsetWidth;
+
+  app.classList.add("landslide");
+
+
+  notification(
+
+    "⚠ LANDSLIDE",
+
+    "Please evacuate the interface."
+
+  );
+
+
+  setTimeout(()=>{
+
+    if(Math.random()<.45){
+
+      screenGlitch();
+
+    }
+
+  },300);
+
+
+  setTimeout(()=>{
+
+    app.classList.remove("landslide");
+
+  },1950);
+
+}
+
+
+/* =========================================================
+   PLAYER / PAGE VROOM
+========================================================= */
+
+function spinPlayer(){
+
+  if(
+    !document
+      .getElementById("streamView")
+      .classList.contains("active")
+  ){
+
+    pageVroom();
+
+    return;
+
+  }
+
+
+  const element=
+    document.getElementById("playerStage");
+
+
+  element.classList.remove("spinVroom");
+
+  void element.offsetWidth;
+
+  element.classList.add("spinVroom");
+
+
+  playerMessage(
+    "VROOM VROOM"
+  );
+
+
+  setTimeout(()=>{
+
+    element.classList.remove("spinVroom");
+
+  },1600);
+
+}
+
+
+function pageVroom(){
+
+  const app=
+    document.getElementById("app");
+
+
+  app.animate(
+
+    [
+
+      {
+        transform:"rotate(0deg) scale(1)"
+      },
+
+      {
+        transform:"rotate(150deg) scale(.8)"
+      },
+
+      {
+        transform:"rotate(300deg) scale(1.05)"
+      },
+
+      {
+        transform:"rotate(360deg) scale(1)"
+      }
+
+    ],
+
+    {
+      duration:1500,
+      easing:"ease-in-out"
+    }
+
+  );
+
+}
+
+
+/* =========================================================
+   PLAYER MESSAGES
+========================================================= */
+
+function playerMessage(text){
+
+  if(
+    !document
+      .getElementById("streamView")
+      .classList.contains("active")
+  ){
+
+    return;
+
+  }
+
+
+  const element=
+    document.getElementById("playerWarning");
+
+
+  element.textContent=
+    text ||
+    choose(playerMessages);
+
+
+  element.style.display=
+    "block";
+
+
+  element.style.left=
+    random(20,80)+"%";
+
+
+  element.style.top=
+    random(10,75)+"%";
+
+
+  setTimeout(()=>{
+
+    element.style.display=
+      "none";
+
+  },1200);
+
+}
+
+
+/* =========================================================
+   PLAYER GLITCH
+========================================================= */
+
+function playerGlitch(){
+
+  if(
+    !document
+      .getElementById("streamView")
+      .classList.contains("active")
+  ){
+
+    return;
+
+  }
+
+
+  const element=
+    document.getElementById("playerGlitchOverlay");
+
+
+  element.style.opacity=
+    ".9";
+
+
+  element.animate(
+
+    [
+
+      {transform:"translateX(-12px)"},
+
+      {transform:"translateX(15px)"},
+
+      {transform:"translateX(-8px)"},
+
+      {transform:"translateX(0)"}
+
+    ],
+
+    {
+      duration:160,
+      iterations:5
+    }
+
+  );
+
+
+  setTimeout(()=>{
+
+    element.style.opacity=0;
+
+  },850);
+
+}
+
+
+/* =========================================================
+   PLAYER TRANSFORMS
+========================================================= */
+
+function tiltPlayer(){
+
+  if(
+    !document
+      .getElementById("streamView")
+      .classList.contains("active")
+  ){
+
+    return;
+
+  }
+
+
+  const element=
+    document.getElementById("playerStage");
+
+
+  element.classList.remove("playerTilt");
+
+  void element.offsetWidth;
+
+  element.classList.add("playerTilt");
+
+
+  setTimeout(()=>{
+
+    element.classList.remove("playerTilt");
+
+  },1600);
+
+}
+
+
+function mirrorPlayer(){
+
+  if(
+    !document
+      .getElementById("streamView")
+      .classList.contains("active")
+  ){
+
+    return;
+
+  }
+
+
+  const element=
+    document.getElementById("playerStage");
+
+
+  element.classList.remove("playerMirror");
+
+  void element.offsetWidth;
+
+  element.classList.add("playerMirror");
+
+
+  setTimeout(()=>{
+
+    element.classList.remove("playerMirror");
+
+  },1400);
+
+}
+
+
+function squishPlayer(){
+
+  if(
+    !document
+      .getElementById("streamView")
+      .classList.contains("active")
+  ){
+
+    return;
+
+  }
+
+
+  const element=
+    document.getElementById("playerStage");
+
+
+  element.classList.remove("playerSquish");
+
+  void element.offsetWidth;
+
+  element.classList.add("playerSquish");
+
+
+  setTimeout(()=>{
+
+    element.classList.remove("playerSquish");
+
+  },1400);
+
+}
+
+
+/* =========================================================
+   FAKE BUFFERING
+========================================================= */
+
+function fakeBuffering(){
+
+  if(
+    !document
+      .getElementById("streamView")
+      .classList.contains("active")
+  ){
+
+    return;
+
+  }
+
+
+  const box=
+    document.getElementById("fakeBuffer");
+
+
+  const text=
+    document.getElementById("bufferText");
+
+
+  const fill=
+    document.getElementById("bufferFill");
+
+
+  box.style.display=
+    "block";
+
+
+  const values=[
+
+    4,
+    19,
+    46,
+    63,
+    81,
+    99,
+    103,
+    117,
+    -8,
+    52,
+    100
+
+  ];
+
+
+  let index=0;
+
+
+  const timer=
+    setInterval(()=>{
+
+      const value=
+        values[index++];
+
+
+      text.textContent=
+        `BUFFERING: ${value}%`;
+
+
+      fill.style.width=
+        `${Math.max(0,Math.min(100,value))}%`;
+
+
+      if(index>=values.length){
+
+        clearInterval(timer);
+
+
+        text.textContent=
+
+          "BUFFERING COMPLETE. BEGINNING BUFFERING.";
+
+
+        setTimeout(()=>{
+
+          box.style.display=
+            "none";
+
+        },900);
+
+      }
+
+    },350);
+
+}
+
+
+/* =========================================================
+   PAGE TILT / SIDEBAR / TOPBAR
+========================================================= */
+
+function tiltPage(){
+
+  const app=
+    document.getElementById("app");
+
+
+  app.classList.remove("pageTilt");
+
+  void app.offsetWidth;
+
+  app.classList.add("pageTilt");
+
+
+  setTimeout(()=>{
+
+    app.classList.remove("pageTilt");
+
+  },1700);
+
+}
+
+
+function escapeSidebar(){
+
+  const element=
+    document.getElementById("sidebar");
+
+
+  element.classList.remove("sideEscape");
+
+  void element.offsetWidth;
+
+  element.classList.add("sideEscape");
+
+
+  setTimeout(()=>{
+
+    element.classList.remove("sideEscape");
+
+  },1600);
+
+}
+
+
+function flipTop(){
+
+  const element=
+    document.getElementById("topbar");
+
+
+  element.classList.remove("topFlip");
+
+  void element.offsetWidth;
+
+  element.classList.add("topFlip");
+
+
+  setTimeout(()=>{
+
+    element.classList.remove("topFlip");
+
+  },1500);
+
+}
+
+
+/* =========================================================
+   SCREEN GLITCH
+========================================================= */
+
+function screenGlitch(){
+
+  const overlay=
+    document.getElementById("screenGlitch");
+
+
+  const app=
+    document.getElementById("app");
+
+
+  overlay.style.display=
+    "block";
+
+
+  app.classList.add("rgbMode");
+
+
+  overlay.animate(
+
+    [
+
+      {
+        clipPath:"inset(0 0 82% 0)",
+        transform:"translateX(-18px)"
+      },
+
+      {
+        clipPath:"inset(29% 0 46% 0)",
+        transform:"translateX(22px)"
+      },
+
+      {
+        clipPath:"inset(60% 0 18% 0)",
+        transform:"translateX(-15px)"
+      },
+
+      {
+        clipPath:"inset(0)",
+        transform:"translateX(0)"
+      }
+
+    ],
+
+    {
+      duration:220,
+      iterations:3
+    }
+
+  );
+
+
+  setTimeout(()=>{
+
+    overlay.style.display=
+      "none";
+
+
+    app.classList.remove("rgbMode");
+
+  },700);
+
+}
+
+
+/* =========================================================
+   CARD ATTACK
+========================================================= */
+
+function cardAttack(){
+
+  const cards=[
+
+    ...document
+      .querySelectorAll(".card")
+
+  ];
+
+
+  if(!cards.length){
+
+    return;
+
+  }
+
+
+  choose(cards).animate(
+
+    [
+
+      {
+        transform:"translate(0,0) rotate(0)"
+      },
+
+      {
+        transform:
+          `translate(${random(-45,45)}px,${random(-25,25)}px) rotate(${random(-12,12)}deg)`
+      },
+
+      {
+        transform:"translate(0,0) rotate(0)"
+      }
+
+    ],
+
+    {
+      duration:700
+    }
+
+  );
+
+}
+
+
+/* =========================================================
+   WRONG HOVER PREVIEW
+========================================================= */
+
+function wrongHoverPreview(
+  thumbnailElement,
+  realChannel
+){
+
+  if(Math.random()>.55){
+
+    return;
+
+  }
+
+
+  const image=
+    thumbnailElement.querySelector("img");
+
+
+  const wrong=
+    choose(
+
+      channels.filter(
+        channel=>channel.name!==realChannel
+      )
+
+    );
+
+
+  const original=
+    thumbnail(realChannel);
+
+
+  image.src=
+    thumbnail(wrong.name)
+    +"?wrong="
+    +Date.now();
+
+
+  setTimeout(()=>{
+
+    image.src=
+      original
+      +"?back="
+      +Date.now();
+
+  },850);
+
+}
+
+
+/* =========================================================
+   CARD SWAPPING
+========================================================= */
+
+function swapCards(){
+
+  const grid=
+    document.getElementById("streamGrid");
+
+
+  const cards=[
+    ...grid.children
+  ];
+
+
+  if(cards.length<2){
+
+    return;
+
+  }
+
+
+  const first=
+    choose(cards);
+
+
+  let second=
+    choose(cards);
+
+
+  while(first===second){
+
+    second=
+      choose(cards);
+
+  }
+
+
+  const rectA=
+    first.getBoundingClientRect();
+
+
+  const rectB=
+    second.getBoundingClientRect();
+
+
+  first.animate(
+
+    [
+
+      {
+        transform:"translate(0,0)"
+      },
+
+      {
+        transform:
+          `translate(${rectB.left-rectA.left}px,${rectB.top-rectA.top}px)`
+      },
+
+      {
+        transform:"translate(0,0)"
+      }
+
+    ],
+
+    {
+      duration:900
+    }
+
+  );
+
+
+  second.animate(
+
+    [
+
+      {
+        transform:"translate(0,0)"
+      },
+
+      {
+        transform:
+          `translate(${rectA.left-rectB.left}px,${rectA.top-rectB.top}px)`
+      },
+
+      {
+        transform:"translate(0,0)"
+      }
+
+    ],
+
+    {
+      duration:900
+    }
+
+  );
+
+
+  setTimeout(()=>{
+
+    const placeholder=
+      document.createElement("span");
+
+
+    grid.insertBefore(
+      placeholder,
+      first
+    );
+
+
+    grid.insertBefore(
+      first,
+      second
+    );
+
+
+    grid.insertBefore(
+      second,
+      placeholder
+    );
+
+
+    placeholder.remove();
+
+  },450);
+
+}
+
+
+/* =========================================================
+   SIDEBAR INFECTION
+========================================================= */
+
+function sidebarInfection(){
+
+  const area=
+    document.getElementById("sidebarChannels");
+
+
+  const victim=
+    choose(channels);
+
+
+  notification(
+
+    "SIDEBAR INFECTION",
+
+    `${victim.name} is reproducing.`
+
+  );
+
+
+  let count=0;
+
+
+  const timer=
+    setInterval(()=>{
+
+      area.insertAdjacentHTML(
+
+        "afterbegin",
+
+        sidebarHTML(
+          victim,
+          true
+        )
+
+      );
+
+
+      count++;
+
+
+      if(count>=5){
+
+        clearInterval(timer);
+
+
+        setTimeout(()=>{
+
+          document
+            .querySelectorAll(".infectedClone")
+            .forEach(
+              element=>element.remove()
+            );
+
+        },3200);
+
+      }
+
+    },250);
+
+}
+
+
+/* =========================================================
+   VIEWER COUNT
+========================================================= */
+
+function viewerCountInsanity(){
+
+  const cards=[
+
+    ...document
+      .querySelectorAll(".card")
+
+  ];
+
+
+  if(!cards.length){
+
+    return;
+
+  }
+
+
+  const card=
+    choose(cards);
+
+
+  const viewer=
+    card.querySelector(".viewers");
+
+
+  const original=
+    card.dataset.viewers+
+    " viewers*";
+
+
+  const numbers=[
+
+    "8 viewers",
+
+    "91K viewers",
+
+    "4.7M viewers",
+
+    "-3 viewers",
+
+    "999999999 viewers",
+
+    "NaN viewers",
+
+    "yes viewers",
+
+    original
+
+  ];
+
+
+  let index=0;
+
+
+  const timer=
+    setInterval(()=>{
+
+      viewer.textContent=
+        numbers[index++];
+
+
+      if(index>=numbers.length){
+
+        clearInterval(timer);
+
+      }
+
+    },330);
+
+}
+
+
+/* =========================================================
+   TITLE MUTATION
+========================================================= */
+
+function mutateTitle(){
+
+  if(
+    !currentChannel ||
+    !document
+      .getElementById("streamView")
+      .classList.contains("active")
+  ){
+
+    return;
+
+  }
+
+
+  const title=
+    document.getElementById("streamTitle");
+
+
+  const original=
+    currentChannel.title;
+
+
+  const titles=[
+
+    original,
+
+    original+"???",
+
+    "LIVE PROBABLY",
+
+    "WE LOST HIM",
+
+    "STREAM LOCATED SOMEWHERE",
+
+    "PLEASE STAND BY",
+
+    "NEVER MIND",
+
+    original
+
+  ];
+
+
+  let index=0;
+
+
+  const timer=
+    setInterval(()=>{
+
+      title.textContent=
+        titles[index++];
+
+
+      if(index>=titles.length){
+
+        clearInterval(timer);
+
+      }
+
+    },450);
+
+}
+
+
+/* =========================================================
+   FOLLOW IDENTITY CRISIS
+========================================================= */
+
+function followIdentityCrisis(){
+
+  const button=
+    document.getElementById("followButton");
+
+
+  const normal=
+    button.dataset.following==="yes"
+
+      ?
+
+      "♥ Following"
+
+      :
+
+      "♡ Follow";
+
+
+  const identities=[
+
+    "Follow",
+
+    "Unfollow",
+
+    "Follow yourself",
+
+    "Follow your dreams",
+
+    "Follow nobody",
+
+    "Follow?",
+
+    "Don't press this",
+
+    normal
+
+  ];
+
+
+  let index=0;
+
+
+  const timer=
+    setInterval(()=>{
+
+      button.textContent=
+        identities[index++];
+
+
+      if(index>=identities.length){
+
+        clearInterval(timer);
+
+      }
+
+    },350);
+
+}
+
+
+/* =========================================================
+   LANGUAGE CORRUPTION
+========================================================= */
+
+function languageCorruption(){
+
+  const targets=[
+
+    [
+
+      document.getElementById("browseButton"),
+
+      "Browse",
+
+      [
+        "Explorar",
+        "Parcourir",
+        "ブラウズ",
+        "Buscar",
+        "Sfoglia"
+      ]
+
+    ],
+
+    [
+
+      document.getElementById("followingNav"),
+
+      "Following",
+
+      [
+        "Siguiendo",
+        "Suivi",
+        "フォロー中",
+        "Seguendo"
+      ]
+
+    ],
+
+    [
+
+      document.getElementById("sidebarHeading"),
+
+      "RECOMMENDED CHANNELS",
+
+      [
+        "CHAÎNES RECOMMANDÉES",
+        "おすすめ",
+        "CANALES",
+        "KANÄLE???"
+      ]
+
+    ]
+
+  ];
+
+
+  const result=
+    choose(targets);
+
+
+  const element=
+    result[0];
+
+
+  const normal=
+    result[1];
+
+
+  const languages=
+    result[2];
+
+
+  element.textContent=
+    choose(languages);
+
+
+  setTimeout(()=>{
+
+    element.textContent=
+      normal;
+
+  },3000);
+
+}
+
+
+/* =========================================================
+   FAKE CURSOR
+========================================================= */
+
+function kidnapCursor(){
+
+  const fake=
+    document.getElementById("fakeCursor");
+
+
+  fake.style.display=
+    "block";
+
+
+  fake.style.left=
+    random(10,80)+"vw";
+
+
+  fake.style.top=
+    random(15,75)+"vh";
+
+
+  fake.animate(
+
+    [
+
+      {
+        transform:"translate(0,0)"
+      },
+
+      {
+        transform:
+          `translate(${random(-300,300)}px,${random(-200,200)}px)`
+      },
+
+      {
+        transform:
+          `translate(${random(-250,250)}px,${random(-180,180)}px)`
+      }
+
+    ],
+
+    {
+      duration:2800,
+      easing:"ease-in-out"
+    }
+
+  );
+
+
+  setTimeout(()=>{
+
+    fake.style.display=
+      "none";
+
+  },2900);
+
+}
+
+
+/* =========================================================
+   BACKWARDS SCROLL
+========================================================= */
+
+let reverseScroll=false;
+
+
+window.addEventListener(
+
+  "wheel",
+
+  event=>{
+
+    if(!reverseScroll){
+
+      return;
+
+    }
+
+
+    event.preventDefault();
+
+
+    window.scrollBy(
+
+      0,
+
+      -event.deltaY*1.25
+
+    );
+
+  },
+
+  {
+    passive:false
+  }
+
+);
+
+
+function scrollBetrayal(){
+
+  reverseScroll=true;
+
+
+  notification(
+
+    "SCROLL DIRECTION UPDATED",
+
+    "Down is currently up."
+
+  );
+
+
+  setTimeout(()=>{
+
+    reverseScroll=false;
+
+  },2300);
+
+}
+
+
+/* =========================================================
+   BATTERY
+========================================================= */
+
+function fakeBattery(){
+
+  const box=
+    document.getElementById("batteryWarning");
+
+
+  const title=
+    document.getElementById("batteryTitle");
+
+
+  const text=
+    document.getElementById("batteryText");
+
+
+  title.textContent=
+    "⚠ BATTERY 1%";
+
+
+  text.textContent=
+    "Plug in your laptop immediately.";
+
+
+  box.style.display=
+    "block";
+
+
+  setTimeout(()=>{
+
+    title.textContent=
+      "⚡ BATTERY 143%";
+
+
+    text.textContent=
+      "OVERCHARGED. Please unplug reality.";
+
+  },1900);
+
+
+  setTimeout(()=>{
+
+    box.style.display=
+      "none";
+
+  },4300);
+
+}
+
+
+/* =========================================================
+   WEBSITE SINK
+========================================================= */
+
+function sinkingWebsite(){
+
+  notification(
+
+    "SEA LEVEL UPDATE",
+
+    "The website is sinking."
+
+  );
+
+
+  document
+    .getElementById("app")
+    .animate(
+
+      [
+
+        {transform:"translateY(0)"},
+
+        {transform:"translateY(15px)"},
+
+        {transform:"translateY(45px)"},
+
+        {transform:"translateY(85px)"},
+
+        {transform:"translateY(130px)"},
+
+        {transform:"translateY(0)"}
+
+      ],
+
+      {
+        duration:5500,
+        easing:"ease-in-out"
+      }
+
+    );
+
+}
+
+
+/* =========================================================
+   UI GRAVITY
+========================================================= */
+
+function gravityFailure(){
+
+  notification(
+
+    "GRAVITY DRIVER FAILED",
+
+    "Several interface components are falling."
+
+  );
+
+
+  const selectors=[
+
+    "#browseButton",
+
+    "#searchButton",
+
+    "#settingsButton",
+
+    "#followButton",
+
+    ".card",
+
+    ".sideChannel",
+
+    "#heroButton"
+
+  ];
+
+
+  const candidates=[
+
+    ...document.querySelectorAll(
+      selectors.join(",")
+    )
+
+  ];
+
+
+  const shuffled=
+    candidates.sort(
+      ()=>Math.random()-.5
+    );
+
+
+  shuffled
+    .slice(0,7)
+    .forEach(
+
+      (element,index)=>{
+
+        setTimeout(()=>{
+
+          element.animate(
+
+            [
+
+              {
+                transform:
+                  "translate(0,0) rotate(0)"
+              },
+
+              {
+                transform:
+                  `translate(${random(-80,80)}px,${random(80,240)}px) rotate(${random(-30,30)}deg)`
+              },
+
+              {
+                transform:
+                  `translate(${random(-30,30)}px,${random(30,80)}px) rotate(${random(-10,10)}deg)`
+              },
+
+              {
+                transform:
+                  "translate(0,0) rotate(0)"
+              }
+
+            ],
+
+            {
+              duration:3000,
+              easing:"ease-in-out"
+            }
+
+          );
+
+        },index*100);
+
+      }
+
+    );
+
+
+  setTimeout(()=>{
+
+    notification(
+
+      "GRAVITY DRIVER RESTARTED",
+
+      "Please pretend nothing happened."
+
+    );
+
+  },3100);
+
+}
+
+
+/* =========================================================
+   FAKE CRASH
+========================================================= */
+
+function fakeCrash(){
+
+  document
+    .getElementById("crashOverlay")
+    .classList.add("active");
+
+
+  setTimeout(()=>{
+
+    document
+      .getElementById("crashOverlay")
+      .classList.remove("active");
+
+
+    notification(
+
+      "PROGRAM RECOVERED",
+
+      "Unfortunately."
+
+    );
+
+  },6000);
+
+}
+
+
+function runAway(button){
+
+  button.style.left=
+    random(-140,140)+"px";
+
+
+  button.style.top=
+    random(-60,60)+"px";
+
+}
+
+
+/* =========================================================
+   CAPTCHA
+========================================================= */
+
+let captchaAttempts=0;
+
+
+function fakeCaptcha(){
+
+  captchaAttempts=0;
+
+
+  const captcha=
+    document.getElementById("captcha");
+
+
+  const box=
+    document.getElementById("captchaCheck");
+
+
+  box.style.left=
+    "0";
+
+
+  box.style.top=
+    "0";
+
+
+  box.textContent=
+    "";
+
+
+  document
+    .getElementById("captchaText")
+    .textContent=
+    "Click the checkbox.";
+
+
+  captcha.classList.add("active");
+
+}
+
+
+document
+  .getElementById("captchaCheck")
+  .addEventListener(
+
+    "mouseenter",
+
+    function(){
+
+      if(captchaAttempts<2){
+
+        this.style.left=
+          random(-90,180)+"px";
+
+
+        this.style.top=
+          random(-30,60)+"px";
+
+      }
+
+    }
+
+  );
+
+
+document
+  .getElementById("captchaCheck")
+  .addEventListener(
+
+    "click",
+
+    function(){
+
+      captchaAttempts++;
+
+
+      if(captchaAttempts<3){
+
+        document
+          .getElementById("captchaText")
+          .textContent=
+          `Humanity: ${captchaAttempts*21}%`;
+
+
+        this.style.left=
+          random(-80,180)+"px";
+
+
+        return;
+
+      }
+
+
+      document
+        .getElementById("captchaText")
+        .textContent=
+        "Humanity: 63%. Good enough.";
+
+
+      this.textContent=
+        "✓";
+
+
+      setTimeout(()=>{
+
+        document
+          .getElementById("captcha")
+          .classList.remove("active");
+
+      },1500);
+
+    }
+
+  );
+
+
+/* =========================================================
+   METEORS
+========================================================= */
+
+function meteorShower(){
+
+  notification(
+
+    "☄ METEOR WARNING",
+
+    "Please remain inside your browser."
+
+  );
+
+
+  for(
+    let i=0;
+    i<14;
+    i++
+  ){
+
+    setTimeout(()=>{
+
+      const meteor=
+        document.createElement("div");
+
+
+      meteor.className=
+        "meteor";
+
+
+      meteor.textContent=
+        "☄ "+choose(notices);
+
+
+      meteor.style.top=
+        random(-200,-50)+"px";
+
+
+      meteor.style.right=
+        random(-500,-250)+"px";
+
+
+      meteor.style.background=
+        choose(notificationColors);
+
+
+      document.body.appendChild(meteor);
+
+
+      meteor.animate(
+
+        [
+
+          {
+            transform:
+              "translate(0,0) rotate(-20deg)"
+          },
+
+          {
+            transform:
+              `translate(-${innerWidth+800}px,${innerHeight+700}px) rotate(${random(100,300)}deg)`
+          }
+
+        ],
+
+        {
+          duration:
+            random(1800,2900),
+
+          easing:"linear"
+        }
+
+      );
+
+
+      setTimeout(()=>{
+
+        meteor.remove();
+
+      },3100);
+
+    },i*130);
+
+  }
+
+
+  if(Math.random()<.55){
+
+    setTimeout(
+      massiveMeteor,
+      800
+    );
+
+  }
+
+}
+
+
+function massiveMeteor(){
+
+  const meteor=
+    document.createElement("div");
+
+
+  meteor.className=
+    "meteor meteorBig";
+
+
+  meteor.textContent=
+
+    "☄ CRITICAL UPDATE: YOUR SESSION EXPIRED YESTERDAY";
+
+
+  document.body.appendChild(meteor);
+
+
+  meteor.animate(
+
+    [
+
+      {
+        transform:
+          "translate(0,0) rotate(-15deg)"
+      },
+
+      {
+        transform:
+          `translate(-${innerWidth+1000}px,${innerHeight+900}px) rotate(180deg)`
+      }
+
+    ],
+
+    {
+      duration:2600,
+      easing:"linear"
+    }
+
+  );
+
+
+  setTimeout(()=>{
+
+    meteor.remove();
+
+  },2800);
+
+}
+
+
+/* =========================================================
+   TORNADO
+========================================================= */
+
+function tornado(){
+
+  notification(
+
+    "🌪 TORNADO WARNING",
+
+    "Loose interface elements should seek shelter."
+
+  );
+
+
+  const messages=[];
+
+
+  for(
+    let i=0;
+    i<12;
+    i++
+  ){
+
+    const element=
+      document.createElement("div");
+
+
+    element.className=
+      "tornadoItem";
+
+
+    element.style.background=
+      choose(notificationColors);
+
+
+    element.textContent=
+      choose(notices);
+
+
+    document.body.appendChild(element);
+
+
+    messages.push(element);
+
+
+    const radius=
+      70+i*15;
+
+
+    const start=
+      i*(Math.PI*2/12);
+
+
+    const frames=[];
+
+
+    for(
+      let step=0;
+      step<=20;
+      step++
+    ){
+
+      const angle=
+        start+
+        step*.62;
+
+
+      const x=
+        Math.cos(angle)*radius;
+
+
+      const y=
+        Math.sin(angle)*radius*.65;
+
+
+      frames.push({
+
+        transform:
+          `translate(${x}px,${y}px) rotate(${step*30}deg)`
+
+      });
+
+    }
+
+
+    element.animate(
+
+      frames,
+
+      {
+        duration:3200,
+        easing:"linear"
+      }
+
+    );
+
+  }
+
+
+  setTimeout(()=>{
+
+    messages.forEach(
+
+      (element,index)=>{
+
+        const x=
+          Math.cos(index)*innerWidth;
+
+
+        const y=
+          Math.sin(index)*innerHeight;
+
+
+        element.animate(
+
+          [
+
+            {
+              transform:"translate(0,0)"
+            },
+
+            {
+              transform:
+                `translate(${x}px,${y}px) rotate(400deg)`
+            }
+
+          ],
+
+          {
+            duration:800
+          }
+
+        );
+
+
+        setTimeout(()=>{
+
+          element.remove();
+
+        },850);
+
+      }
+
+    );
+
+  },3200);
+
+}
+
+
+/* =========================================================
+   MAINTENANCE
+========================================================= */
+
+let maintenanceRunning=false;
+
+
+function maintenanceCountdown(){
+
+  if(maintenanceRunning){
+
+    return;
+
+  }
+
+
+  maintenanceRunning=true;
+
+
+  const box=
+    document.getElementById("maintenance");
+
+
+  const number=
+    document.getElementById("maintenanceNumber");
+
+
+  const sub=
+    document.getElementById("maintenanceSub");
+
+
+  box.style.display=
+    "block";
+
+
+  sub.textContent=
+    "Please finish whatever you were doing.";
+
+
+  let count=10;
+
+
+  number.textContent=
+    count;
+
+
+  const timer=
+    setInterval(()=>{
+
+      count--;
+
+
+      number.textContent=
+        count;
+
+
+      if(count<=1){
+
+        clearInterval(timer);
+
+
+        setTimeout(()=>{
+
+          number.textContent=
+            "CANCELLED";
+
+
+          sub.textContent=
+
+            "Maintenance cancelled due to maintenance.";
+
+        },700);
+
+
+        setTimeout(()=>{
+
+          box.style.display=
+            "none";
+
+
+          maintenanceRunning=false;
+
+        },2500);
+
+      }
+
+    },500);
+
+}
+
+
+/* =========================================================
+   FLOATING
+========================================================= */
+
+function floating(){
+
+  const element=
+    document.getElementById("floatingChaos");
+
+
+  element.textContent=
+    choose(playerMessages);
+
+
+  element.style.left=
+    random(10,75)+"%";
+
+
+  element.style.top=
+    random(10,75)+"%";
+
+
+  element.style.transform=
+    `rotate(${random(-15,15)}deg)`;
+
+
+  element.style.display=
+    "block";
+
+
+  setTimeout(()=>{
+
+    element.style.display=
+      "none";
+
+  },1200);
+
+}
+
+
+/* =========================================================
+   FAKE SYSTEM
+========================================================= */
+
+function fakeSystem(){
+
+  const bar=
+    document.getElementById("systemBar");
+
+
+  bar.textContent=
+    choose([
+
+      "BATTERY: 382%",
+
+      "WI-FI: EMOTIONALLY CONNECTED",
+
+      "SYSTEM TIME: EVENTUALLY",
+
+      "CAPS LOCK: PHYSICALLY LOOSE",
+
+      "RAM: 12 KB PROBABLY",
+
+      "CURSOR: WANTED FOR QUESTIONING",
+
+      "DISPLAY: RGB COLUMNS MISSING",
+
+      "CPU: THINKING ABOUT IT",
+
+      "PING: YES ms",
+
+      "LCD PANEL: SEVERELY CONCERNING",
+
+      "WEATHER: POPUP RAIN",
+
+      "GRAVITY DRIVER: UNSTABLE",
+
+      "TSUNAMI DIRECTION: ALL",
+
+      "TORNADO STATUS: PERHAPS",
+
+      "GLASS INTEGRITY: 46%",
+
+      "SCREEN PIECES DETECTED: 2"
+
+    ]);
+
+
+  bar.style.display=
+    "block";
+
+
+  setTimeout(()=>{
+
+    bar.style.display=
+      "none";
+
+  },2100);
+
+}
+
+
+/* =========================================================
+   POPUPS
+========================================================= */
+
+function createPopup(){
+
+  if(
+    document
+      .querySelectorAll(".popup")
+      .length>=4
+  ){
+
+    return;
+
+  }
+
+
+  const popup=
+    document.createElement("div");
+
+
+  popup.className=
+    "popup";
+
+
+  popup.style.left=
+
+    random(
+      15,
+      Math.max(
+        20,
+        innerWidth-410
+      )
+    )
+    +"px";
+
+
+  popup.style.top=
+
+    random(
+      75,
+      Math.max(
+        90,
+        innerHeight-270
+      )
+    )
+    +"px";
+
+
+  popup.innerHTML=`
+
+    <div class="popupHeader">
+
+      <span>
+        TWITCHY SYSTEM DIALOG
+      </span>
+
+      <span>
+        ?
+      </span>
+
+    </div>
+
+    <div class="popupContent">
+      ${choose(popupMessages)}
+    </div>
+
+    <div class="popupButtons">
+
+      <button class="no">
+        NO
+      </button>
+
+      <button class="yes">
+        YES, UNFORTUNATELY
+      </button>
+
+    </div>
+
+  `;
+
+
+  popup
+    .querySelector(".yes")
+    .onclick=
+    ()=>{
+
+      if(Math.random()<.6){
+
+        popup.remove();
+
+      }
+
+      else{
+
+        popup.remove();
+
+        setTimeout(
+          createPopup,
+          200
+        );
+
+      }
+
+    };
+
+
+  popup
+    .querySelector(".no")
+    .onmouseenter=
+    function(){
+
+      if(Math.random()<.75){
+
+        this.style.position=
+          "relative";
+
+
+        this.style.left=
+          random(-120,120)+"px";
+
+
+        this.style.top=
+          random(-40,40)+"px";
+
+
+        this.textContent=
+          choose([
+            "NOPE",
+            "MISSED",
+            "TRY AGAIN",
+            "WRONG",
+            "YES?"
+          ]);
+
+      }
+
+    };
+
+
+  document
+    .getElementById("popupLayer")
+    .appendChild(popup);
+
+
+  setTimeout(()=>{
+
+    if(popup.isConnected){
+
+      popup.remove();
+
+    }
+
+  },9500);
+
+}
+
+
+/* =========================================================
+   MINOR CHAOS
+========================================================= */
+
+function chaos(){
+
+  const effects=[
+
+    earthquake,
+
+    spinPlayer,
+
+    tiltPlayer,
+
+    mirrorPlayer,
+
+    squishPlayer,
+
+    playerGlitch,
+
+    screenGlitch,
+
+    tiltPage,
+
+    flipTop,
+
+    escapeSidebar,
+
+    cardAttack,
+
+    floating,
+
+    fakeSystem,
+
+    viewerCountInsanity,
+
+    languageCorruption,
+
+    followIdentityCrisis
+
+  ];
+
+
+  choose(effects)();
+
+
+  if(Math.random()<.40){
+
+    setTimeout(()=>{
+
+      choose(effects)();
+
+    },random(100,450));
+
+  }
+
+}
+
+
+/* =========================================================
+   SCHEDULERS
+========================================================= */
+
+/*
+   Ordinary notifications:
+   ~20% reduced from original.
+*/
+
+setInterval(()=>{
+
+  notification();
+
+
+  if(Math.random()<.40){
+
+    setTimeout(
+      notification,
+      320
+    );
+
+  }
+
+},2940);
+
+
+/*
+   Light drizzle
+*/
+
+setInterval(()=>{
+
+  if(Math.random()<.60){
+
+    createRainDrop();
+
+  }
+
+
+  if(Math.random()<.22){
+
+    setTimeout(
+      createRainDrop,
+      180
+    );
+
+  }
+
+},1700);
+
+
+/*
+   Assam rainstorm
+*/
+
+setInterval(()=>{
+
+  requestMajorDisaster(
+
+    notificationRainstorm,
+
+    "Assam Rainstorm"
+
+  );
+
+},25000);
+
+
+/*
+   Minor chaos
+*/
+
+setInterval(()=>{
+
+  chaos();
+
+},3700);
+
+
+/*
+   Frequent earthquake
+*/
+
+setInterval(()=>{
+
+  earthquake();
+
+},9000);
+
+
+/*
+   RGB screen destruction
+*/
+
+setInterval(()=>{
+
+  lcdDamage();
+
+},10000);
+
+
+/*
+   360 Vroom
+*/
+
+setInterval(()=>{
+
+  spinPlayer();
+
+},12500);
+
+
+/*
+   Landslide
+*/
+
+setInterval(()=>{
+
+  landslide();
+
+},15500);
+
+
+/*
+   Left -> Right tsunami
+*/
+
+setInterval(()=>{
+
+  requestMajorDisaster(
+
+    horizontalTsunami,
+
+    "Left-to-right tsunami"
+
+  );
+
+},21000);
+
+
+/*
+   Right -> Left tsunami
+*/
+
+setInterval(()=>{
+
+  requestMajorDisaster(
+
+    reverseHorizontalTsunami,
+
+    "Right-to-left tsunami"
+
+  );
+
+},24000);
+
+
+/*
+   Diagonal tsunami
+*/
+
+setInterval(()=>{
+
+  requestMajorDisaster(
+
+    diagonalTsunami,
+
+    "Diagonal tsunami"
+
+  );
+
+},28000);
+
+
+/*
+   Bottom -> top
+*/
+
+setInterval(()=>{
+
+  requestMajorDisaster(
+
+    upwardTsunami,
+
+    "Upward tsunami"
+
+  );
+
+},31500);
+
+
+/*
+   Popups
+*/
+
+setInterval(()=>{
+
+  if(Math.random()<.74){
+
+    createPopup();
+
+  }
+
+},8200);
+
+
+/*
+   Moving card
+*/
+
+setInterval(()=>{
+
+  cardAttack();
+
+},3200);
+
+
+/*
+   Fake cursor
+*/
+
+setInterval(()=>{
+
+  kidnapCursor();
+
+},18500);
+
+
+/*
+   Backwards scroll
+*/
+
+setInterval(()=>{
+
+  scrollBetrayal();
+
+},31000);
+
+
+/*
+   Fake battery
+*/
+
+setInterval(()=>{
+
+  fakeBattery();
+
+},37000);
+
+
+/*
+   Website sinking
+*/
+
+setInterval(()=>{
+
+  sinkingWebsite();
+
+},34000);
+
+
+/*
+   Notification gravity
+*/
+
+setInterval(()=>{
+
+  notificationGravity();
+
+},28000);
+
+
+/*
+   Fake crash
+*/
+
+setInterval(()=>{
+
+  fakeCrash();
+
+},43000);
+
+
+/*
+   Title mutation
+*/
+
+setInterval(()=>{
+
+  mutateTitle();
+
+},17500);
+
+
+/*
+   Viewer count insanity
+*/
+
+setInterval(()=>{
+
+  viewerCountInsanity();
+
+},11500);
+
+
+/*
+   Follow button crisis
+*/
+
+setInterval(()=>{
+
+  followIdentityCrisis();
+
+},22000);
+
+
+/*
+   Search gaslight
+*/
+
+setInterval(()=>{
+
+  searchGaslight();
+
+},4200);
+
+
+/*
+   CAPTCHA
+*/
+
+setInterval(()=>{
+
+  fakeCaptcha();
+
+},48000);
+
+
+/*
+   Language corruption
+*/
+
+setInterval(()=>{
+
+  languageCorruption();
+
+},15600);
+
+
+/*
+   Sidebar infection
+*/
+
+setInterval(()=>{
+
+  sidebarInfection();
+
+},33000);
+
+
+/*
+   Card swapping
+*/
+
+setInterval(()=>{
+
+  swapCards();
+
+},19000);
+
+
+/*
+   Fake buffering
+*/
+
+setInterval(()=>{
+
+  fakeBuffering();
+
+},21000);
+
+
+/*
+   Meteors
+*/
+
+setInterval(()=>{
+
+  requestMajorDisaster(
+
+    meteorShower,
+
+    "Meteor shower"
+
+  );
+
+},38000);
+
+
+/*
+   UI gravity
+*/
+
+setInterval(()=>{
+
+  gravityFailure();
+
+},27000);
+
+
+/*
+   Tornado
+*/
+
+setInterval(()=>{
+
+  requestMajorDisaster(
+
+    tornado,
+
+    "Tornado"
+
+  );
+
+},41000);
+
+
+/*
+   Maintenance
+*/
+
+setInterval(()=>{
+
+  maintenanceCountdown();
+
+},52000);
+
+
+/*
+   =========================================================
+   NEW SCREEN FRACTURE
+
+   Approximately every 47 seconds.
+
+   It goes through the SAME major-disaster lock,
+   so it gets room to actually be seen.
+   =========================================================
+*/
+
+setInterval(()=>{
+
+  requestMajorDisaster(
+
+    screenFracture,
+
+    "Screen fracture"
+
+  );
+
+},47000);
+
+
+/* =========================================================
+   EVENTS
+========================================================= */
+
+document
+  .getElementById("pumpButton")
+  .addEventListener(
+    "click",
+    pumpVolumeButton
+  );
+
+
+document
+  .getElementById("searchButton")
+  .addEventListener(
+    "click",
+    search
+  );
+
+
+document
+  .getElementById("searchInput")
+  .addEventListener(
+
+    "keydown",
+
+    event=>{
+
+      if(event.key==="Enter"){
+
+        search();
+
+      }
+
+    }
+
+  );
+
+
+document
+  .getElementById("chatSend")
+  .addEventListener(
+    "click",
+    submitFakeChat
+  );
+
+
+document
+  .getElementById("chatInput")
+  .addEventListener(
+
+    "keydown",
+
+    event=>{
+
+      if(event.key==="Enter"){
+
+        submitFakeChat();
+
+      }
+
+    }
+
+  );
+
+
+/* =========================================================
+   FOLLOW
+========================================================= */
+
+document
+  .getElementById("followButton")
+  .addEventListener(
+
+    "click",
+
+    function(){
+
+      const following=
+        this.dataset.following==="yes";
+
+
+      if(following){
+
+        this.dataset.following=
+          "no";
+
+
+        this.textContent=
+          "♡ Follow";
+
+
+        notification(
+
+          "UNFOLLOWED*",
+
+          "*Nothing changed on real Twitch."
+
+        );
+
+      }
+
+      else{
+
+        this.dataset.following=
+          "yes";
+
+
+        this.textContent=
+          "♥ Following";
+
+
+        notification(
+
+          "FOLLOWED*",
+
+          "*Your actual Twitch account remains untouched."
+
+        );
+
+      }
+
+    }
+
+  );
+
+
+/* =========================================================
+   BROWSE
+========================================================= */
+
+document
+  .getElementById("browseButton")
+  .addEventListener(
+
+    "click",
+
+    function(){
+
+      if(Math.random()<.5){
+
+        randomStream();
+
+      }
+
+      else{
+
+        earthquake();
+
+
+        notification(
+
+          "BROWSE COMPLETE",
+
+          "We browsed on your behalf."
+
+        );
+
+      }
+
+    }
+
+  );
+
+
+/* =========================================================
+   SETTINGS ESCAPE
+========================================================= */
+
+const settings=
+  document.getElementById("settingsButton");
+
+
+settings.addEventListener(
+
+  "mouseenter",
+
+  ()=>{
+
+    if(Math.random()<.8){
+
+      settings.animate(
+
+        [
+
+          {
+            transform:
+              "translate(0,0)"
+          },
+
+          {
+            transform:
+              `translate(${random(-160,160)}px,${random(30,100)}px) rotate(${random(-25,25)}deg)`
+          }
+
+        ],
+
+        {
+          duration:230
+        }
+
+      );
+
+    }
+
+  }
+
+);
+
+
+settings.addEventListener(
+  "click",
+  createPopup
+);
+
+
+/* =========================================================
+   LOGO APOCALYPSE
+========================================================= */
+
+document
+  .getElementById("logo")
+  .addEventListener(
+
+    "click",
+
+    ()=>{
+
+      earthquake();
+
+      lcdDamage();
+
+      screenGlitch();
+
+
+      setTimeout(
+        spinPlayer,
+        200
+      );
+
+
+      setTimeout(()=>{
+
+        const majorChoices=[
+
+          notificationRainstorm,
+
+          horizontalTsunami,
+
+          reverseHorizontalTsunami,
+
+          upwardTsunami,
+
+          diagonalTsunami,
+
+          meteorShower,
+
+          tornado,
+
+          /*
+             NEW possibility:
+             THE DARAAR.
+          */
+
+          screenFracture
+
+        ];
+
+
+        requestMajorDisaster(
+
+          choose(majorChoices),
+
+          "Logo disaster"
+
+        );
+
+      },700);
+
+
+      notification(
+
+        "DISASTER BUTTON ACTIVATED",
+
+        "One premium-grade disaster has been selected for you."
+
+      );
+
+    }
+
+  );
+
+
+/* =========================================================
+   CONTROLS BLOCKED
+========================================================= */
+
+document
+  .getElementById("controlBlocker")
+  .addEventListener(
+
+    "click",
+
+    ()=>{
+
+      notification(
+
+        "ABSOLUTELY NOT.",
+
+        "Normal controls have been confiscated. Use PUMP VOLUME."
+
+      );
+
+    }
+
+  );
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+renderStreams();
+
+renderSidebar();
+
+
+setTimeout(()=>{
+
+  notification(
+
+    "TWITCHY INITIALIZED",
+
+    "Normal user experience could not be located."
+
+  );
+
+},700);
+
+
+setTimeout(()=>{
+
+  earthquake();
+
+},1800);
+
+
+setTimeout(()=>{
+
+  lcdDamage();
+
+},3000);
+
+
+setTimeout(()=>{
+
+  createPopup();
+
+},4800);
+
+
+/*
+   First giant event.
+*/
+
+setTimeout(()=>{
+
+  requestMajorDisaster(
+
+    notificationRainstorm,
+
+    "Initial rainstorm"
+
+  );
+
+},8500);
+
+
+/*
+   Another later.
+*/
+
+setTimeout(()=>{
+
+  requestMajorDisaster(
+
+    horizontalTsunami,
+
+    "Initial tsunami"
+
+  );
+
+},16500);
+
+
+setTimeout(()=>{
+
+  kidnapCursor();
+
+},21000);
+
+
+/*
+   Give people a chance to see the new
+   fracture relatively early once.
+
+   If another major event happens to own
+   the cooldown at this exact moment,
+   it safely skips instead of overlapping.
+*/
+
+setTimeout(()=>{
+
+  requestMajorDisaster(
+
+    screenFracture,
+
+    "Initial screen fracture"
+
+  );
+
+},29000);
+
+
+/* =========================================================
+   REFRESH THUMBNAILS
+========================================================= */
+
+setInterval(()=>{
+
+  document
+    .querySelectorAll(".thumbnail img")
+    .forEach(
+
+      image=>{
+
+        const real=
+          image.dataset.real;
+
+
+        if(real){
+
+          image.src=
+
+            real
+            +
+            "?refresh="
+            +
+            Date.now();
+
+        }
+
+      }
+
+    );
+
+},60000);
+
+</script>
+
+</body>
+</html>
